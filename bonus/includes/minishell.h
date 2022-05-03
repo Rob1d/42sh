@@ -1,0 +1,87 @@
+/*
+** EPITECH PROJECT, 2022
+** minshel
+** File description:
+** header fo the minshell
+*/
+
+#ifndef MINISHELL_H_
+    #define MINISHELL_H_
+
+    #include <unistd.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <sys/wait.h>
+    #include <string.h>
+    #include <sys/types.h>
+    #include <dirent.h>
+    #include <errno.h>
+    #include <fcntl.h>
+    #include <stdbool.h>
+    #include <sys/stat.h>
+
+typedef struct {
+    char *old_cd;
+    char *user;
+    char *swap;
+    char **modif_env;
+    char **new_PWD;
+} cd;
+
+typedef struct {
+    int len_pipe;
+    char **env;
+    char **commands;
+    int pipe_fd[2];
+    int return_last;
+    cd *cd_params;
+}pipe_t;
+
+char *read_last_line(char *line);
+char *as_alias(char *command);
+char **parsing_alias(char *str);
+void write_to_rc(char *command);
+bool is_builtin_name(char *str);
+bool is_builtin(pipe_t *ppt, int nb);
+int process_commands(char *line, char **env, cd *cd_params, bool is_piped);
+void semicolon(char *command, char **re);
+int pipe_gestion(char *command, char **env, cd *cd_params);
+int left_redirection(char *command, char **env, cd *cd_params);
+void suppr_command(char *command, char *launched, char c);
+char *name_file(char *command, int i);
+int right_redirection(char *command, char **env, cd *cd_params);
+void check_execution(char **parsing_command, pipe_t *ppt);
+void error_acess(char *pars);
+void check_spaces(char **parsed);
+char **split_commands(char *str);
+void apply_old(char *old_cd, char *tmp_buf);
+void params_cd(cd *cd_params);
+int go_outside(char **parsed, cd *cd_params, char **env);
+int go_home(char **parsed, cd *cd_params, char **env);
+int minus_cd(cd *cd_params, char **env);
+void my_put_str_er(char *str);
+void verify_return(int rd);
+char *put_bin(char *command);
+char **wait_commands(void);
+int path_to_home(char *cwd);
+int search_in_env(char **env, char *set);
+int unset_loop(char **env, char **pars);
+int error_setenv(char **pars);
+int is_letter(char c);
+char *set_value_two(char **pars);
+int is_env(char **env, char **pars);
+int move_env(char **env, int i);
+int len_env(char **env);
+int my_cd(char **parsed, cd *cd_params, char **env);
+int is_str_equal(char *str, char *to_test);
+int launch_command(char **env, char **pars);
+int verify_command(char **env, cd *cd_commands);
+char **parsing(char *str);
+int str_len(char *str);
+void my_putchar(char c);
+int set_env(char **env, char **pars);
+void my_show_word_array(char **tab);
+int unset_env(char **env, char *to_reset);
+char **parsing_path(char *str);
+char *as_path(char **env, char *command);
+#endif
