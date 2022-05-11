@@ -48,7 +48,7 @@ SRC_T =	sources/commands.c	\
 
 LIB =  -O2 -Wall
 
-NAME	=	mysh
+NAME	=	42sh
 
 OBJ	=	$(SRC:.c=.o)
 
