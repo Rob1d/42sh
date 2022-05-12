@@ -7,10 +7,10 @@
 
 #include "../includes/minishell.h"
 
-char **wait_commands(void)
+char **wait_commands(shell_t *sh)
 {
     char *buf = NULL;
-    char **re = malloc(sizeof(char *) * 50);
+    char **re;
     size_t line_size = 0;
     write(1, "Rob1 > ", 7);
     line_size = getline(&buf, &line_size, stdin);
@@ -19,7 +19,7 @@ char **wait_commands(void)
     buf[line_size - 1] = '\0';
     if (line_size == 1)
         buf = "ui";
-    semicolon(buf, re);
+    re = semicolon(buf, sh);
     return re;
 }
 
@@ -37,6 +37,25 @@ char *put_bin(char *command)
 void my_put_str_er(char *str)
 {
     write(2, str, str_len(str));
+}
+
+static void other_signal_check(int rd)
+{
+    if (WIFSTOPPED(rd)) {
+        if (WSTOPSIG(rd) == SIGSEGV)
+            my_put_str_er("Segmentation fault");
+        if (WSTOPSIG(rd) == SIGFPE)
+            my_put_str_er("Floating point exception");
+        if (WSTOPSIG(rd) == SIGILL)
+            my_put_str_er("Illegal instruction");
+        if (WSTOPSIG(rd) == SIGABRT)
+            my_put_str_er("Abort");
+        if (WSTOPSIG(rd) == SIGTRAP)
+            my_put_str_er("Trace/breakpoint trap");
+        if (WSTOPSIG(rd) == SIGBUS)
+            my_put_str_er("Bus error");
+        write(2, "\n", 1);
+    }
 }
 
 void verify_return(int rd)
@@ -58,4 +77,5 @@ void verify_return(int rd)
             my_put_str_er(" (core dumped)");
         write(2, "\n", 1);
     }
+    other_signal_check(rd);
 }

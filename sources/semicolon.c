@@ -28,26 +28,45 @@ static char *first_semicolon(char *command)
     command += i;
     return command;
 }
-
-void semicolon(char *command, char **re)
+static int which_separator(char *command, int i)
 {
-    int cp_re = 0;
+    if (command[i] == '\0' || command[i + 1] == '\0')
+        return -1;
+    if (command[i] == ';')
+        return 0;
+    if (command[i] == '|' && command[i + 1] == '|')
+        return 1;
+    if (command[i] == '&' && command[i + 1] == '&')
+        return 2;
+    return -1;
+}
+
+char **semicolon(char *command, shell_t *sh)
+{
     int i = 0;
     int cp = 0;
-    command  = first_semicolon(command);
-    re[cp_re] = malloc(sizeof(char) * str_len(command) + 2);
+    char **re = malloc(sizeof(char *) * 2);
+    sh->len_separator = 0;
+    sh->separator_type = malloc(sizeof(int));
+    command = first_semicolon(command);
+    re[0] = malloc(sizeof(char) * str_len(command) + 2);
     for (; command[i] != '\0'; ++i) {
-        if (command[i] == ';' && no_space(command, &i)) {
-            re[cp_re][cp] = '\0';
-            ++cp_re;
-            re[cp_re] = malloc(sizeof(char) * str_len(command) + 2);
+        if (which_separator(command, i) != -1 && no_space(command, &i)) {
+            re[sh->len_separator][cp] = '\0';
+            sh->separator_type[sh->len_separator] = which_separator(command, i);
+            sh->len_separator++;
+            sh->separator_type != 0 ? ++i : 0;
+            re = realloc(re, (sizeof(char *) * (sh->len_separator + 2)));
+            sh->separator_type = realloc(sh->separator_type, (sizeof(int) * (sh->len_separator + 2)));
+            re[sh->len_separator] = malloc(sizeof(char) * str_len(command) + 2);
             cp = 0;
         } else if (command[i] != ';'){
-            re[cp_re][cp] = command[i];
+            re[sh->len_separator][cp] = command[i];
             ++cp;
         } else
             --i;
     }
-    re[cp_re][cp] = '\0';
-    re[cp_re + 1] = NULL;
+    re[sh->len_separator][cp] = '\0';
+    re[sh->len_separator + 1] = NULL;
+    return re;
 }

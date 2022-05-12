@@ -32,7 +32,7 @@ void error_acess(char *pars)
     my_put_str_er(": Command not found.\n");
 }
 
-int launch_command(char **env, char **pars)
+int launch_command(char **env, char **pars, shell_t *sh)
 {
     int pid = 0;
     int rd = 0;
@@ -49,6 +49,7 @@ int launch_command(char **env, char **pars)
     }
     if (waitpid(pid, &rd, 0) == -1)
         exit(84);
+    sh->last_return = WIFEXITED(rd) ? WEXITSTATUS(rd) : 1;
     verify_return(rd);
     return 0;
 }
@@ -74,13 +75,19 @@ int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
         return 1;
     if (left_redirection(line, env, sh))
         return 1;
-    return launch_command(env, pars);
+    return launch_command(env, pars, sh);
 }
 
 int verify_command(char **env, shell_t *sh)
 {
-    char **line = wait_commands();
-    for (int i = 0; line[i] != NULL; ++i)
-        process_commands(line[i], env, sh, false);
+    char **line = wait_commands(sh);
+    if (sh->len_separator == 0) {
+        process_commands(line[0], env, sh, false);
+        return 1;
+    }
+    for (int i = 0; i <= sh->len_separator; ++i) {
+        if (i == 0 || sh->separator_type[i - 1] == 0 || (sh->separator_type[i - 1] == 1 && sh->last_return != 0) || (sh->separator_type[i - 1] == 2 && sh->last_return == 0))
+            process_commands(line[i], env, sh, false);
+    }
     return 0;
 }

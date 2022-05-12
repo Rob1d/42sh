@@ -52,6 +52,8 @@ NAME	=	42sh
 
 OBJ	=	$(SRC:.c=.o)
 
+CFLAGS += -g
+
 all: ${NAME}
 
 $(NAME): $(OBJ)

@@ -29,6 +29,8 @@ typedef struct {
 
 typedef struct shell_s {
     int last_return;
+    int *separator_type;
+    int len_separator;
     cd *cd_params;
 }shell_t;
 
@@ -45,7 +47,6 @@ void no_acess(int file, char *n_file);
 bool is_builtin_name(char *str);
 bool is_builtin(pipe_t *ppt, int nb);
 int process_commands(char *line, char **env, shell_t *sh, bool is_piped);
-void semicolon(char *command, char **re);
 int pipe_gestion(char *command, char **env, shell_t *sh);
 int left_redirection(char *command, char **env, shell_t *sh);
 void suppr_command(char *command, char *launched, char c);
@@ -63,7 +64,7 @@ int minus_cd(cd *cd_params, char **env);
 void my_put_str_er(char *str);
 void verify_return(int rd);
 char *put_bin(char *command);
-char **wait_commands(void);
+char **wait_commands(shell_t *sh);
 int path_to_home(char *cwd);
 int search_in_env(char **env, char *set);
 int unset_loop(char **env, char **pars);
@@ -75,7 +76,7 @@ int move_env(char **env, int i);
 int len_env(char **env);
 int my_cd(char **parsed, cd *cd_params, char **env);
 int is_str_equal(char *str, char *to_test);
-int launch_command(char **env, char **pars);
+int launch_command(char **env, char **pars, shell_t *sh);
 int verify_command(char **env, shell_t *sh);
 char **parsing(char *str);
 int str_len(char *str);
@@ -85,4 +86,5 @@ void my_show_word_array(char **tab);
 int unset_env(char **env, char *to_reset);
 char **parsing_path(char *str);
 char *as_path(char **env, char *command);
+char **semicolon(char *command, shell_t *sh);
 #endif
