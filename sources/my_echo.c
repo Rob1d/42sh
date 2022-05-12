@@ -46,6 +46,22 @@ static int write_var(char **env, char *line, shell_t *sh, int i)
             print_without_var(env[w]);
             return i;
         }
+    return 0;
+}
+
+static int check_var(char **env, char *line, shell_t *sh, int i)
+{
+    char *name_var = malloc(sizeof(char) * str_len(line) + 1);
+    ++i;
+    int j = 0;
+    for (; line[i] != ' ' && line[i] != '\0'; ++i, ++j)
+        name_var[j] = line[i];
+    name_var[j] = '\0';
+    if (name_var[0] == '?')
+        return i;
+    for (int w = 0; env[w] != NULL; ++w)
+        if (str_star_with(env[w], name_var))
+            return i;
     fprintf(stderr, "%s: Undefined variable.\n", name_var);
     exit(1);
 }
@@ -64,6 +80,9 @@ bool my_echo(char **env, char *line, char **pars, shell_t *sh)
         for (; (line[i] == ' ' || line[i] == 9) && line[i] != '\0'; ++i);
         start = line[i] == '\'' || line[i] == '"' ? line[i] : '\0';
         line[i] == '\'' || line[i] == '"' ? ++i : 0;
+        for (int x = i; line[x] != start && line[x] != '\0'; ++x)
+            if (line[x] == '$')
+                x = check_var(env, line, sh, x);
         for (; line[i] != start && line[i] != '\0'; ++i) {
             if (line[i] == '$')
                 i = write_var(env, line, sh, i);

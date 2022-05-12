@@ -15,7 +15,7 @@ bool is_builtin(pipe_t *ppt, int nb)
     if (is_str_equal(ppt->commands[nb], "exit"))
         exit(0);
     if (is_str_equal(pars[0], "cd")) {
-        my_cd(pars, ppt->sh->cd_params, ppt->env);
+        my_cd(pars, ppt->sh, ppt->env);
         return 1;
     }
     if (is_env(ppt->env, pars))

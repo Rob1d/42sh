@@ -29,38 +29,41 @@ void apply_old(char *old_cd, char *tmp_buf)
     tmp_buf[i] = '\0';
 }
 
-int minus_cd(cd *cd_params, char **env)
+int minus_cd(shell_t *sh, char **env)
 {
     char *tmp = malloc(sizeof(char) * 10000);
-    chdir(cd_params->modif_env[2]);
-    apply_old(cd_params->modif_env[2], tmp);
-    apply_old(cd_params->new_PWD[2], cd_params->modif_env[2]);
-    apply_old(tmp, cd_params->new_PWD[2]);
-    set_env(env, cd_params->modif_env);
-    set_env(env, cd_params->new_PWD);
+    chdir(sh->cd_params->modif_env[2]);
+    apply_old(sh->cd_params->modif_env[2], tmp);
+    apply_old(sh->cd_params->new_PWD[2], sh->cd_params->modif_env[2]);
+    apply_old(tmp, sh->cd_params->new_PWD[2]);
+    set_env(env, sh->cd_params->modif_env);
+    set_env(env, sh->cd_params->new_PWD);
+    sh->last_return = 0;
     return 0;
 }
 
-int go_home(char **parsed, cd *cd_params, char **env)
+int go_home(char **parsed, shell_t *sh, char **env)
 {
     char *actual = malloc(sizeof(char) * 10000);
-    getcwd(cd_params->old_cd, 10000);
-    cd_params->modif_env[2] = cd_params->old_cd;
-    set_env(env, cd_params->modif_env);
-    chdir(cd_params->user);
+    getcwd(sh->cd_params->old_cd, 10000);
+    sh->cd_params->modif_env[2] = sh->cd_params->old_cd;
+    set_env(env, sh->cd_params->modif_env);
+    chdir(sh->cd_params->user);
     getcwd(actual, 10000);
-    cd_params->new_PWD[2] = actual;
-    return set_env(env, cd_params->new_PWD);
+    sh->cd_params->new_PWD[2] = actual;
+    sh->last_return = 0;
+    return set_env(env, sh->cd_params->new_PWD);
 }
 
-int go_outside(char **parsed, cd *cd_params, char **env)
+int go_outside(char **parsed, shell_t *sh, char **env)
 {
     char *actual = malloc(sizeof(char) * 10000);
-    getcwd(cd_params->old_cd, 10000);
-    cd_params->modif_env[2] = cd_params->old_cd;
-    set_env(env, cd_params->modif_env);
+    getcwd(sh->cd_params->old_cd, 10000);
+    sh->cd_params->modif_env[2] = sh->cd_params->old_cd;
+    set_env(env, sh->cd_params->modif_env);
     chdir(parsed[1]);
     getcwd(actual, 10000);
-    cd_params->new_PWD[2] = actual;
-    return set_env(env, cd_params->new_PWD);
+    sh->cd_params->new_PWD[2] = actual;
+    sh->last_return = 0;
+    return set_env(env, sh->cd_params->new_PWD);
 }

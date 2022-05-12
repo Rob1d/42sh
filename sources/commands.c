@@ -65,7 +65,7 @@ int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
     if (is_builtin_name(pars[0]) && is_piped) return 1;
     (is_str_equal(pars[0], "exit")) ? exit(0) : 0;
     if (is_str_equal(pars[0], "cd")) {
-        my_cd(pars, sh->cd_params, env);
+        my_cd(pars, sh, env);
         return 1;
     }
     if (is_env(env, pars)) return 1;
