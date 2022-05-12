@@ -57,24 +57,19 @@ int launch_command(char **env, char **pars, shell_t *sh)
 int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
 {
     char **pars;
-    if (is_str_equal(line, "ui"))
-        return 1;
-    if (right_redirection(line, env, sh))
-        return 1;
-    if (pipe_gestion(line, env, sh))
-        return 1;
+    if (is_str_equal(line, "ui")) return 1;
+    if (right_redirection(line, env, sh)) return 1;
+    if (pipe_gestion(line, env, sh)) return 1;
     pars = parsing(line);
-    if (is_builtin_name(pars[0]) && is_piped)
-        return 1;
+    if (my_echo(env, line, pars, sh)) return 1;
+    if (is_builtin_name(pars[0]) && is_piped) return 1;
     (is_str_equal(pars[0], "exit")) ? exit(0) : 0;
     if (is_str_equal(pars[0], "cd")) {
         my_cd(pars, sh->cd_params, env);
         return 1;
     }
-    if (is_env(env, pars))
-        return 1;
-    if (left_redirection(line, env, sh))
-        return 1;
+    if (is_env(env, pars)) return 1;
+    if (left_redirection(line, env, sh)) return 1;
     return launch_command(env, pars, sh);
 }
 

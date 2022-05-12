@@ -18,6 +18,7 @@
     #include <errno.h>
     #include <fcntl.h>
     #include <stdbool.h>
+    #include <string.h>
 
 typedef struct {
     char *old_cd;
@@ -87,4 +88,6 @@ int unset_env(char **env, char *to_reset);
 char **parsing_path(char *str);
 char *as_path(char **env, char *command);
 char **semicolon(char *command, shell_t *sh, int i, int cp);
+//my echo
+bool my_echo(char **env, char *line, char **pars, shell_t *sh);
 #endif

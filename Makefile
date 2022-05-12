@@ -23,7 +23,9 @@ SRC	=	sources/main.c	\
 		sources/check_good_env.c	\
 		sources/pars_path.c	\
 		sources/semicolon.c	\
-		sources/builtins_tools.c
+		sources/builtins_tools.c	\
+		sources/my_echo.c
+
 
 SRC_T =	sources/commands.c	\
         sources/my_cd.c	\
@@ -42,7 +44,8 @@ SRC_T =	sources/commands.c	\
 		sources/check_good_env.c	\
 		sources/pars_path.c	\
 		sources/semicolon.c	\
-		sources/builtins_tools.c
+		sources/builtins_tools.c	\
+		sources/my_echo.c
 
 
 
