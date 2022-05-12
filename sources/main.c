@@ -27,6 +27,8 @@ int main(int av, char **argc, char **env)
     params_cd(cd_params);
     sh->cd_params = cd_params;
     sh->last_return = 0;
+    sh->len_separator = 0;
+    sh->separator_type = malloc(sizeof(int));
     path_to_home(sh->cd_params->user);
     signal(SIGINT, sigint);
     while (!0)

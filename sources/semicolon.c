@@ -41,23 +41,24 @@ static int which_separator(char *command, int i)
     return -1;
 }
 
-char **semicolon(char *command, shell_t *sh)
+static void modify_sh_sep(shell_t *sh, char *command, int i)
 {
-    int i = 0;
-    int cp = 0;
+    sh->separator_type[sh->len_separator] = which_separator(command, i);
+    sh->len_separator++;
+    sh->separator_type = realloc(sh->separator_type, (sizeof(int) * (sh->len_separator + 2)));
+}
+
+char **semicolon(char *command, shell_t *sh, int i, int cp)
+{
     char **re = malloc(sizeof(char *) * 2);
-    sh->len_separator = 0;
-    sh->separator_type = malloc(sizeof(int));
     command = first_semicolon(command);
     re[0] = malloc(sizeof(char) * str_len(command) + 2);
     for (; command[i] != '\0'; ++i) {
         if (which_separator(command, i) != -1 && no_space(command, &i)) {
             re[sh->len_separator][cp] = '\0';
-            sh->separator_type[sh->len_separator] = which_separator(command, i);
-            sh->len_separator++;
+            modify_sh_sep(sh, command, i);
             sh->separator_type != 0 ? ++i : 0;
             re = realloc(re, (sizeof(char *) * (sh->len_separator + 2)));
-            sh->separator_type = realloc(sh->separator_type, (sizeof(int) * (sh->len_separator + 2)));
             re[sh->len_separator] = malloc(sizeof(char) * str_len(command) + 2);
             cp = 0;
         } else if (command[i] != ';'){

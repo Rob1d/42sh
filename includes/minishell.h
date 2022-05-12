@@ -86,5 +86,5 @@ void my_show_word_array(char **tab);
 int unset_env(char **env, char *to_reset);
 char **parsing_path(char *str);
 char *as_path(char **env, char *command);
-char **semicolon(char *command, shell_t *sh);
+char **semicolon(char *command, shell_t *sh, int i, int cp);
 #endif

@@ -83,11 +83,20 @@ int verify_command(char **env, shell_t *sh)
     char **line = wait_commands(sh);
     if (sh->len_separator == 0) {
         process_commands(line[0], env, sh, false);
+        free(line[0]);
+        free(line);
         return 1;
     }
     for (int i = 0; i <= sh->len_separator; ++i) {
-        if (i == 0 || sh->separator_type[i - 1] == 0 || (sh->separator_type[i - 1] == 1 && sh->last_return != 0) || (sh->separator_type[i - 1] == 2 && sh->last_return == 0))
+        if (i == 0 || sh->separator_type[i - 1] == 0 ||
+        (sh->separator_type[i - 1] == 1 && sh->last_return != 0) ||
+        (sh->separator_type[i - 1] == 2 && sh->last_return == 0))
             process_commands(line[i], env, sh, false);
+        free(line[i]);
     }
+    free(line);
+    sh->len_separator = 0;
+    free(sh->separator_type);
+    sh->separator_type = malloc(sizeof(int));
     return 0;
 }
