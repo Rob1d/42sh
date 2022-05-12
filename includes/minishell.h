@@ -27,25 +27,30 @@ typedef struct {
     char **new_PWD;
 } cd;
 
+typedef struct shell_s {
+    int last_return;
+    cd *cd_params;
+}shell_t;
+
 typedef struct {
     int len_pipe;
     char **env;
     char **commands;
     int pipe_fd[2];
     int return_last;
-    cd *cd_params;
+    shell_t *sh;
 }pipe_t;
 
 void no_acess(int file, char *n_file);
 bool is_builtin_name(char *str);
 bool is_builtin(pipe_t *ppt, int nb);
-int process_commands(char *line, char **env, cd *cd_params, bool is_piped);
+int process_commands(char *line, char **env, shell_t *sh, bool is_piped);
 void semicolon(char *command, char **re);
-int pipe_gestion(char *command, char **env, cd *cd_params);
-int left_redirection(char *command, char **env, cd *cd_params);
+int pipe_gestion(char *command, char **env, shell_t *sh);
+int left_redirection(char *command, char **env, shell_t *sh);
 void suppr_command(char *command, char *launched, char c);
 char *name_file(char *command, int i);
-int right_redirection(char *command, char **env, cd *cd_params);
+int right_redirection(char *command, char **env, shell_t *sh);
 void check_execution(char **parsing_command, pipe_t *ppt);
 void error_acess(char *pars);
 void check_spaces(char **parsed);
@@ -71,7 +76,7 @@ int len_env(char **env);
 int my_cd(char **parsed, cd *cd_params, char **env);
 int is_str_equal(char *str, char *to_test);
 int launch_command(char **env, char **pars);
-int verify_command(char **env, cd *cd_commands);
+int verify_command(char **env, shell_t *sh);
 char **parsing(char *str);
 int str_len(char *str);
 void my_putchar(char c);

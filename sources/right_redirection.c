@@ -46,7 +46,7 @@ static int open_fd(int check, char *n_file)
     return file;
 }
 
-static void right_write(char *command, int i, char **env, cd *cd_params)
+static void right_write(char *command, int i, char **env, shell_t *sh)
 {
     int file = 0;
     int check = 0;
@@ -57,12 +57,12 @@ static void right_write(char *command, int i, char **env, cd *cd_params)
     file = open_fd(check, n_file);
     dup2(file, STDOUT_FILENO);
     suppr_command(command, n_file, '>');
-    process_commands(command, env, cd_params, false);
+    process_commands(command, env, sh, false);
     close(file);
     exit(0);
 }
 
-int right_redirection(char *command, char **env, cd *cd_params)
+int right_redirection(char *command, char **env, shell_t *sh)
 {
     int i = 0;
     int pid = 0;
@@ -71,7 +71,7 @@ int right_redirection(char *command, char **env, cd *cd_params)
         return 0;
     pid = fork();
     if (pid == 0)
-        right_write(command, i, env, cd_params);
+        right_write(command, i, env, sh);
     waitpid(pid, NULL, 0);
     return 1;
 }

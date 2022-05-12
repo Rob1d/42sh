@@ -7,7 +7,7 @@
 
 #include "../includes/minishell.h"
 
-static pipe_t *init_pipes(char *command, char **env, cd *cd_params)
+static pipe_t *init_pipes(char *command, char **env, shell_t *sh)
 {
     pipe_t *ppt;
     int len_pipes = 0;
@@ -21,7 +21,7 @@ static pipe_t *init_pipes(char *command, char **env, cd *cd_params)
     ppt->env = env;
     ppt->commands = split_commands(command);
     ppt->return_last = -1;
-    ppt->cd_params = cd_params;
+    ppt->sh = sh;
     return ppt;
 }
 
@@ -33,7 +33,7 @@ static void first_pipe(pipe_t *ppt)
     first_pid = fork();
     if (first_pid == 0) {
         dup2(ppt->pipe_fd[1], STDOUT_FILENO);
-        process_commands(ppt->commands[0], ppt->env, ppt->cd_params, false);
+        process_commands(ppt->commands[0], ppt->env, ppt->sh, false);
         exit(0);
     }
     ppt->return_last = ppt->pipe_fd[0];
@@ -50,7 +50,7 @@ static void middle_pipe(pipe_t *ppt, int nb)
     if (pid == 0) {
         dup2(ppt->return_last, STDIN_FILENO);
         dup2(ppt->pipe_fd[1], STDOUT_FILENO);
-        process_commands(ppt->commands[nb], ppt->env, ppt->cd_params, false);
+        process_commands(ppt->commands[nb], ppt->env, ppt->sh, false);
         exit(0);
     }
     close(ppt->pipe_fd[1]);
@@ -70,7 +70,7 @@ static int end_pipe(pipe_t *ppt, int nb)
     if (pid == 0) {
         dup2(ppt->return_last, STDIN_FILENO);
         close(ppt->return_last);
-        process_commands(ppt->commands[nb], ppt->env, ppt->cd_params, false);
+        process_commands(ppt->commands[nb], ppt->env, ppt->sh, false);
         exit(0);
     }
     close(ppt->return_last);
@@ -79,9 +79,9 @@ static int end_pipe(pipe_t *ppt, int nb)
     return 0;
 }
 
-int pipe_gestion(char *command, char **env, cd *cd_params)
+int pipe_gestion(char *command, char **env, shell_t *sh)
 {
-    pipe_t *ppt = init_pipes(command, env, cd_params);
+    pipe_t *ppt = init_pipes(command, env, sh);
     int i = 1;
     int pid = 0;
     bool good = false;

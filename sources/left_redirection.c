@@ -24,7 +24,7 @@ void no_acess(int file, char *n_file)
     }
 }
 
-static void left_write(char *command, int i, char **env, cd *cd_params)
+static void left_write(char *command, int i, char **env, shell_t *sh)
 {
     int file = 0;
     int check = 0;
@@ -39,12 +39,12 @@ static void left_write(char *command, int i, char **env, cd *cd_params)
     no_acess(file, n_file);
     dup2(file, STDIN_FILENO);
     suppr_command(command, n_file, '<');
-    process_commands(command, env, cd_params, false);
+    process_commands(command, env, sh, false);
     close(file);
     exit(0);
 }
 
-int left_redirection(char *command, char **env, cd *cd_params)
+int left_redirection(char *command, char **env, shell_t *sh)
 {
     int i = 0;
     int pid = 0;
@@ -53,7 +53,7 @@ int left_redirection(char *command, char **env, cd *cd_params)
         return 0;
     pid = fork();
     if (pid == 0)
-        left_write(command, i, env, cd_params);
+        left_write(command, i, env, sh);
     waitpid(pid, NULL, 0);
     return 1;
 }
