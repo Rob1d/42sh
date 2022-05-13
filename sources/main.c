@@ -22,6 +22,8 @@ void sigint(int sig)
 int main(int av, char **argc, char **env)
 {
     char **new_env = env;
+    int pid = 0;
+    int tmp;
     shell_t *sh = malloc(sizeof(shell_t));
     cd *cd_params = malloc(sizeof(cd) + 1);
     params_cd(cd_params);
@@ -31,7 +33,10 @@ int main(int av, char **argc, char **env)
     sh->separator_type = malloc(sizeof(int));
     path_to_home(sh->cd_params->user);
     signal(SIGINT, sigint);
-    while (!0)
-        verify_command(new_env, sh);
+    pid = fork();
+    if (pid == 0)
+        while (!0)
+            verify_command(new_env, sh);
+    waitpid(pid, &tmp, 0);
     return 0;
 }

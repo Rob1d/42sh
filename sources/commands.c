@@ -47,7 +47,7 @@ int launch_command(char **env, char **pars, shell_t *sh)
         if (errno == ENOEXEC)
             my_put_str_er("Exec format error. Wrong Architecture.\n");
     }
-    if (waitpid(pid, &rd, 0) == -1)
+    if (waitpid(pid, &rd, WUNTRACED) == -1)
         exit(84);
     sh->last_return = WIFEXITED(rd) ? WEXITSTATUS(rd) : 1;
     verify_return(rd);
