@@ -1,8 +1,8 @@
 ##
 ## EPITECH PROJECT, 2022
-## minishell1
+## 42sh
 ## File description:
-## makefile for minshell
+## makefile for 42sh
 ##
 
 SRC	=	sources/main.c	\
@@ -24,7 +24,9 @@ SRC	=	sources/main.c	\
 		sources/pars_path.c	\
 		sources/semicolon.c	\
 		sources/builtins_tools.c	\
-		sources/my_echo.c
+		sources/my_echo.c	\
+		sources/myshrc_gestion.c	\
+		sources/pars_alias.c
 
 
 SRC_T =	sources/commands.c	\
@@ -45,7 +47,9 @@ SRC_T =	sources/commands.c	\
 		sources/pars_path.c	\
 		sources/semicolon.c	\
 		sources/builtins_tools.c	\
-		sources/my_echo.c
+		sources/my_echo.c	\
+		sources/myshrc_gestion.c	\
+		sources/pars_alias.c
 
 
 

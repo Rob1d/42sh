@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2022
-** minshel
+** 42sh
 ** File description:
-** header fo the minshell
+** header fo the 42sh
 */
 
 #ifndef MINISHELL_H_
@@ -19,6 +19,7 @@
     #include <fcntl.h>
     #include <stdbool.h>
     #include <string.h>
+    #include <sys/stat.h>
     #define IS_LETTER(c) ((c >= 'A' && c <= 'Z') ||\
     (c >= 'a' && c <= 'z') && c != '_')
 
@@ -46,6 +47,10 @@ typedef struct {
     shell_t *sh;
 }pipe_t;
 
+char *read_last_line(char *line);
+char *as_alias(char *command);
+char **parsing_alias(char *str);
+void write_to_rc(char *command);
 void no_acess(int file, char *n_file);
 bool is_builtin_name(char *str);
 bool is_builtin(pipe_t *ppt, int nb);

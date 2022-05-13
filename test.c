@@ -10,48 +10,45 @@ typedef struct history_s {
     int len;
 }history_t;
 
+void putstr(char const *str)
+{
+    write(1, str, strlen(str));
+}
+
 int check_arrows(history_t *hs, int c, int *i, char **password)
 {
+    int tmp_i = *i;
     if (c == 27) {
         c = getchar();
         c = getchar();
-        for (int w = 0; w < 4; ++w) {
-            write(1, "\b", 1);
-            write(1, " ", 1);
-            write(1, "\b", 1);
-        }
+        for (int w = 0; w < 4; ++w)
+            write(1, "\b \b", 3);
         if (c == 'A' && hs->actual_history < hs->len - 1) {
-            for (int w = 0; w < *i; ++w) {
-                write(1, "\b", 1);
-                write(1, " ", 1);
-                write(1, "\b", 1);
-            }
+            for (int w = 0; w < *i; ++w)
+                write(1, "\b \b", 3);
             *i = 0;
             ++hs->actual_history;
-            write(1, hs->history[hs->actual_history], strlen(hs->history[hs->actual_history]));
+            putstr(hs->history[hs->actual_history]);
             *i = strlen(hs->history[hs->actual_history]);
             *password = strdup(hs->history[hs->actual_history]);
             *password = realloc(*password, 128);
         }
         if (c == 'B' && hs->actual_history > 0) {
-            for (int w = 0; w < *i; ++w) {
-                write(1, "\b", 1);
-                write(1, " ", 1);
-                write(1, "\b", 1);
-            }
+            for (int w = 0; w < *i; ++w)
+                write(1, "\b \b", 3);
             *i = 0;
             --hs->actual_history;
-            write(1, hs->history[hs->actual_history], strlen(hs->history[hs->actual_history]));
+            putstr(hs->history[hs->actual_history]);
             *i = strlen(hs->history[hs->actual_history]);
             *password = strdup(hs->history[hs->actual_history]);
             *password = realloc(*password, 128);
         }
-        if (c == 'D') {
+        if (c == 'D' && *i > 0) {
             write(1, "\b\b", 2);
-            write(1, &password[*i - 1], 1);
+            write(1, &password[tmp_i], 1);
         }
         if (c == 'C')
-            write(1, &password[*i - 1], 1);
+            write(1, &password[tmp_i - 1], 1);
         return 1;
     }
     return 0;
