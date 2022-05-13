@@ -7,6 +7,24 @@
 
 #include "../includes/minishell.h"
 
+bool set_alias(char **value)
+{
+    FILE *fp;
+    int i = 0;
+    if (!is_str_equal(value[0], "setalias"))
+        return false;
+    for (; value[i] != NULL; ++i);
+    if (i != 3) {
+        fprintf(stderr, "setalias: Too many arguments.\n");
+        return 1;
+    }
+    fp = fopen("myshrc", "a");
+    fprintf(fp, "alias %s=\"%s\"\n", value[1], value[2]);
+    fclose(fp);
+    printf("good !\n");
+    return true;
+}
+
 int len_spaces_alias(char *str, int i)
 {
     while ((str[i] == '\n' || str[i] == 9) && str[i] != '\0')
