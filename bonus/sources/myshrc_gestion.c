@@ -40,7 +40,8 @@ char *as_alias(char *command)
     struct stat rc_stat;
     char *buf;
     char **alias;
-    stat("myshrc", &rc_stat);
+    if (stat("myshrc", &rc_stat) == -1)
+        return command;
     buf = malloc(sizeof(char) * rc_stat.st_size + 1);
     read(file, buf, rc_stat.st_size);
     buf[rc_stat.st_size] = '\0';
@@ -75,7 +76,9 @@ char *read_last_line(char *line)
 void write_to_rc(char *command)
 {
     int file = open("myshrc_h", O_APPEND | O_WRONLY);
-    write(file, command, str_len(command));
-    write(file, "\n", 1);
-    close(file);
+    if (file != -1) {
+        write(file, command, str_len(command));
+        write(file, "\n", 1);
+        close(file);
+    }
 }

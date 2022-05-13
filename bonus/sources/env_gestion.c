@@ -40,15 +40,17 @@ void augment_size(char **env)
     env = new_env;
 }
 
-int set_env(char **env, char **pars)
+int set_env(char **env, char **pars, shell_t *sh)
 {
     int env_len = len_env(env);
     if (len_env(pars) == 1) {
         my_show_word_array(env);
+        sh->last_return = 0;
         return 1;
     }
-    if (!error_setenv(pars))
+    if (!error_setenv(pars, sh))
         return 84;
+    sh->last_return = 0;
     augment_size(env);
     if (len_env(pars) == 2)
         env[search_in_env(env, pars[1])] = set_value_two(pars);

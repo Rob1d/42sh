@@ -1,8 +1,8 @@
 ##
 ## EPITECH PROJECT, 2022
-## minishell1
+## 42sh
 ## File description:
-## makefile for minshell
+## makefile for 42sh
 ##
 
 SRC	=	sources/main.c	\
@@ -24,8 +24,11 @@ SRC	=	sources/main.c	\
 		sources/pars_path.c	\
 		sources/semicolon.c	\
 		sources/builtins_tools.c	\
+		sources/my_echo.c	\
 		sources/myshrc_gestion.c	\
-		sources/pars_alias.c
+		sources/pars_alias.c	\
+		sources/super_getline/super_getline.c
+
 
 SRC_T =	sources/commands.c	\
         sources/my_cd.c	\
@@ -45,21 +48,24 @@ SRC_T =	sources/commands.c	\
 		sources/pars_path.c	\
 		sources/semicolon.c	\
 		sources/builtins_tools.c	\
+		sources/my_echo.c	\
 		sources/myshrc_gestion.c	\
 		sources/pars_alias.c
 
 
 
-LIB =  -O2 -Wall -g
+LIB =  -O2 -Wall
 
-NAME	=	mysh
+NAME	=	42sh
 
 OBJ	=	$(SRC:.c=.o)
+
+CFLAGS += -g
 
 all: ${NAME}
 
 $(NAME): $(OBJ)
-	gcc -o $(NAME) $(OBJ) $(LIB)
+	gcc $(LIB) -o $(NAME) $(OBJ)
 
 clean:
 	rm -f $(OBJ)

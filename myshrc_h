@@ -158,3 +158,6 @@ make fclean
 ls
 eixt
 exit
+cd
+ls
+cd

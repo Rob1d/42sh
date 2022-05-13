@@ -32,7 +32,7 @@ void error_acess(char *pars)
     my_put_str_er(": Command not found.\n");
 }
 
-int launch_command(char **env, char **pars)
+int launch_command(char **env, char **pars, shell_t *sh)
 {
     int pid = 0;
     int rd = 0;
@@ -47,45 +47,53 @@ int launch_command(char **env, char **pars)
         if (errno == ENOEXEC)
             my_put_str_er("Exec format error. Wrong Architecture.\n");
     }
-    if (waitpid(pid, &rd, 0) == -1)
+    if (waitpid(pid, &rd, WUNTRACED) == -1)
         exit(84);
+    sh->last_return = WIFEXITED(rd) ? WEXITSTATUS(rd) : 1;
     verify_return(rd);
     return 0;
 }
 
-int process_commands(char *line, char **env, cd *cd_params, bool is_piped)
+int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
 {
     char **pars;
     line = as_alias(line);
-    if (line[0] == '!')
-        line = read_last_line(line);
-    if (is_str_equal(line, "ui"))
-        return 1;
-    if (right_redirection(line, env, cd_params))
-        return 1;
-    if (pipe_gestion(line, env, cd_params))
-        return 1;
+    if (is_str_equal(line, "ui")) return 1;
+    if (right_redirection(line, env, sh)) return 1;
+    if (pipe_gestion(line, env, sh)) return 1;
     pars = parsing(line);
-    if (is_builtin_name(pars[0]) && is_piped)
-        return 1;
+    if (set_alias(pars)) return 1;
+    if (my_echo(env, line, pars, sh)) return 1;
+    if (is_builtin_name(pars[0]) && is_piped) return 1;
     (is_str_equal(pars[0], "exit")) ? exit(0) : 0;
     if (is_str_equal(pars[0], "cd")) {
-        my_cd(pars, cd_params, env);
+        my_cd(pars, sh, env);
         return 1;
     }
-    if (is_env(env, pars))
-        return 1;
-    if (left_redirection(line, env, cd_params))
-        return 1;
-    launch_command(env, pars);
-    return 0;
+    if (is_env(env, pars, sh)) return 1;
+    if (left_redirection(line, env, sh)) return 1;
+    return launch_command(env, pars, sh);
 }
 
-int verify_command(char **env, cd *cd_params)
+int verify_command(char **env, shell_t *sh)
 {
-    char **line = wait_commands();
-    for (int i = 0; line[i] != NULL; ++i) {
-        process_commands(line[i], env, cd_params, false);
+    char **line = wait_commands(sh);
+    if (sh->len_separator == 0) {
+        process_commands(line[0], env, sh, false);
+        free(line[0]);
+        free(line);
+        return 1;
     }
+    for (int i = 0; i <= sh->len_separator; ++i) {
+        if (i == 0 || sh->separator_type[i - 1] == 0 ||
+        (sh->separator_type[i - 1] == 1 && sh->last_return != 0) ||
+        (sh->separator_type[i - 1] == 2 && sh->last_return == 0))
+            process_commands(line[i], env, sh, false);
+        free(line[i]);
+    }
+    free(line);
+    sh->len_separator = 0;
+    free(sh->separator_type);
+    sh->separator_type = malloc(sizeof(int));
     return 0;
 }

@@ -22,12 +22,21 @@ void sigint(int sig)
 int main(int av, char **argc, char **env)
 {
     char **new_env = env;
+    int pid = 0;
+    int tmp;
+    shell_t *sh = malloc(sizeof(shell_t));
     cd *cd_params = malloc(sizeof(cd) + 1);
     params_cd(cd_params);
-    path_to_home(cd_params->user);
-    signal(SIGSEGV, segv);
+    sh->cd_params = cd_params;
+    sh->last_return = 0;
+    sh->len_separator = 0;
+    sh->separator_type = malloc(sizeof(int));
+    path_to_home(sh->cd_params->user);
     signal(SIGINT, sigint);
-    while (!0)
-        verify_command(new_env, cd_params);
+    pid = fork();
+    if (pid == 0)
+        while (!0)
+            verify_command(new_env, sh);
+    waitpid(pid, &tmp, 0);
     return 0;
 }
