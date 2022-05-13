@@ -107,4 +107,6 @@ bool my_echo(char **env, char *line, char **pars, shell_t *sh);
 
 //super_getline
 char *super_getline(char **history);
+char **received_input(void);
+void free_array(char **array);
 #endif

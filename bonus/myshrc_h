@@ -158,7 +158,7 @@ make fclean
 ls
 eixt
 exit
-exit
+exit
 exit
 ls
 exit
@@ -177,4 +177,15 @@ cd
 cd
 ls
 cd
+exit
+exit
+ls -la
+ls
+exit
+env
+ls
+exit
+ls sources
+env
+exit
 exit

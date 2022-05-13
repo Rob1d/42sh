@@ -12,12 +12,7 @@ char **wait_commands(shell_t *sh)
     char *buf = NULL;
     char **re;
     size_t line_size = 0;
-    char **history;
-    history = malloc(sizeof(char *) * 4);
-    history[0] = strdup("ls");
-    history[1] = strdup("cd");
-    history[2] = strdup("echo lol");
-    history[3] = NULL;
+    char **history = received_input();
     buf = super_getline(history);
     line_size = strlen(buf);
     if (line_size == 1)

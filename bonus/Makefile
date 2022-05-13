@@ -27,7 +27,8 @@ SRC	=	sources/main.c	\
 		sources/my_echo.c	\
 		sources/myshrc_gestion.c	\
 		sources/pars_alias.c	\
-		sources/super_getline/super_getline.c
+		sources/super_getline/super_getline.c	\
+		sources/super_getline/get_history.c
 
 
 SRC_T =	sources/commands.c	\
