@@ -189,3 +189,14 @@ ls sources
 env
 exit
 exit
+ls -la
+ls
+exit
+cd
+exit
+ls -la
+exit
+cd
+cd
+cd
+cd
