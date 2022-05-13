@@ -18,7 +18,7 @@ bool is_builtin(pipe_t *ppt, int nb)
         my_cd(pars, ppt->sh, ppt->env);
         return 1;
     }
-    if (is_env(ppt->env, pars))
+    if (is_env(ppt->env, pars, ppt->sh))
         return 1;
     return 0;
 }

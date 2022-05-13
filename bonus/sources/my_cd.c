@@ -9,7 +9,7 @@
 
 void params_cd(cd *cd_params)
 {
-    cd_params->old_cd = malloc(sizeof(char) * 10000);
+    cd_params->old_cd = get_current_dir;
     cd_params->user = malloc(sizeof(char) * 10000);
     getcwd(cd_params->old_cd, 10000);
     getcwd(cd_params->user, 10000);

@@ -18,13 +18,17 @@ int unset_env(char **env, char *to_reset)
 {
     int i = 0;
     int j = 0;
-    char *tmp = malloc(sizeof(char) * 1000000);
+    char *tmp;
     while (env[i] != NULL) {
+        tmp = malloc(sizeof(char) * str_len(env[i]) + 1);
         for (j = 0; env[i][j] != '\0' && env[i][j] != '='; ++j)
             tmp[j] = env[i][j];
         tmp[j] = '\0';
-        if (is_str_equal(tmp, to_reset))
+        if (is_str_equal(tmp, to_reset)) {
+            free(tmp);
             return move_env(env, i);
+        }
+        free(tmp);
         ++i;
     }
     return 1;

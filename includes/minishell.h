@@ -19,6 +19,8 @@
     #include <fcntl.h>
     #include <stdbool.h>
     #include <string.h>
+    #define IS_LETTER(c) ((c >= 'A' && c <= 'Z') ||\
+    (c >= 'a' && c <= 'z') && c != '_')
 
 typedef struct {
     char *old_cd;
@@ -69,10 +71,9 @@ char **wait_commands(shell_t *sh);
 int path_to_home(char *cwd);
 int search_in_env(char **env, char *set);
 int unset_loop(char **env, char **pars);
-int error_setenv(char **pars);
-int is_letter(char c);
+int error_setenv(char **pars, shell_t *sh);
 char *set_value_two(char **pars);
-int is_env(char **env, char **pars);
+int is_env(char **env, char **pars, shell_t *sh);
 int move_env(char **env, int i);
 int len_env(char **env);
 int my_cd(char **parsed, shell_t *sh, char **env);
@@ -82,7 +83,7 @@ int verify_command(char **env, shell_t *sh);
 char **parsing(char *str);
 int str_len(char *str);
 void my_putchar(char c);
-int set_env(char **env, char **pars);
+int set_env(char **env, char **pars, shell_t *sh);
 void my_show_word_array(char **tab);
 int unset_env(char **env, char *to_reset);
 char **parsing_path(char *str);

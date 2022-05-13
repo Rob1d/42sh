@@ -41,18 +41,20 @@ int len_env(char **env)
     return i;
 }
 
-int is_env(char **env, char **pars)
+int is_env(char **env, char **pars, shell_t *sh)
 {
     if (is_str_equal(pars[0], "env")) {
         my_show_word_array(env);
+        sh->last_return = 0;
         return 1;
     }
     if (is_str_equal(pars[0], "setenv")) {
-        set_env(env, pars);
+        set_env(env, pars, sh);
         return 1;
     }
     if (is_str_equal(pars[0], "unsetenv")) {
         unset_loop(env, pars);
+        sh->last_return = 0;
         return 1;
     }
     return 0;

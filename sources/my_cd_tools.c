@@ -31,39 +31,39 @@ void apply_old(char *old_cd, char *tmp_buf)
 
 int minus_cd(shell_t *sh, char **env)
 {
-    char *tmp = malloc(sizeof(char) * 10000);
+    char *tmp = malloc(sizeof(char) * 256);
     chdir(sh->cd_params->modif_env[2]);
     apply_old(sh->cd_params->modif_env[2], tmp);
     apply_old(sh->cd_params->new_PWD[2], sh->cd_params->modif_env[2]);
     apply_old(tmp, sh->cd_params->new_PWD[2]);
-    set_env(env, sh->cd_params->modif_env);
-    set_env(env, sh->cd_params->new_PWD);
+    set_env(env, sh->cd_params->modif_env, sh);
+    set_env(env, sh->cd_params->new_PWD, sh);
     sh->last_return = 0;
     return 0;
 }
 
 int go_home(char **parsed, shell_t *sh, char **env)
 {
-    char *actual = malloc(sizeof(char) * 10000);
-    getcwd(sh->cd_params->old_cd, 10000);
+    char *actual = malloc(sizeof(char) * 256);
+    getcwd(sh->cd_params->old_cd, 256);
     sh->cd_params->modif_env[2] = sh->cd_params->old_cd;
-    set_env(env, sh->cd_params->modif_env);
+    set_env(env, sh->cd_params->modif_env, sh);
     chdir(sh->cd_params->user);
-    getcwd(actual, 10000);
+    getcwd(actual, 256);
     sh->cd_params->new_PWD[2] = actual;
     sh->last_return = 0;
-    return set_env(env, sh->cd_params->new_PWD);
+    return set_env(env, sh->cd_params->new_PWD, sh);
 }
 
 int go_outside(char **parsed, shell_t *sh, char **env)
 {
-    char *actual = malloc(sizeof(char) * 10000);
-    getcwd(sh->cd_params->old_cd, 10000);
+    char *actual = malloc(sizeof(char) * 256);
+    getcwd(sh->cd_params->old_cd, 256);
     sh->cd_params->modif_env[2] = sh->cd_params->old_cd;
-    set_env(env, sh->cd_params->modif_env);
+    set_env(env, sh->cd_params->modif_env, sh);
     chdir(parsed[1]);
-    getcwd(actual, 10000);
+    getcwd(actual, 256);
     sh->cd_params->new_PWD[2] = actual;
     sh->last_return = 0;
-    return set_env(env, sh->cd_params->new_PWD);
+    return set_env(env, sh->cd_params->new_PWD, sh);
 }

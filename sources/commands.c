@@ -68,7 +68,7 @@ int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
         my_cd(pars, sh, env);
         return 1;
     }
-    if (is_env(env, pars)) return 1;
+    if (is_env(env, pars, sh)) return 1;
     if (left_redirection(line, env, sh)) return 1;
     return launch_command(env, pars, sh);
 }
