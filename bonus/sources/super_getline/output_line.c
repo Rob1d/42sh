@@ -9,8 +9,15 @@
 
 void special_output(shell_t *sh)
 {
-    sh->last_return == 0 ? printf("\033[0;32m") : printf("\033[0;31m");
+    char *edit_pwd = strdup(sh->cd_params->new_PWD[2]);
+    int i = strlen(edit_pwd);
+    for (; edit_pwd[i] != '/'; --i);
+    edit_pwd += i + 1;
+    sh->last_return == 0 ? printf("\033[1;32m") : printf("\033[1;31m");
     printf("✈  ");
-    printf("\033[0;34m%s \033[0;35m~ ", sh->user_name);
+    printf("\033[1;34m%s {\033[1;36m%s\033[1;34m}\033[1;35m ~ ",
+    sh->user_name, edit_pwd);
     printf("\033[0m");
+    edit_pwd -= i + 1;
+    free(edit_pwd);
 }
