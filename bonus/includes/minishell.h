@@ -42,6 +42,7 @@ typedef struct shell_s {
     int last_return;
     int *separator_type;
     int len_separator;
+    char *user_name;
     cd *cd_params;
 }shell_t;
 
@@ -109,4 +110,5 @@ bool my_echo(char **env, char *line, char **pars, shell_t *sh);
 char *super_getline(char **history);
 char **received_input(void);
 void free_array(char **array);
+void special_output(shell_t *sh);
 #endif

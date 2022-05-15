@@ -32,6 +32,10 @@ int main(int av, char **argc, char **env)
     sh->len_separator = 0;
     sh->separator_type = malloc(sizeof(int));
     path_to_home(sh->cd_params->user);
+    sh->user_name = strdup(sh->cd_params->user);
+    ++sh->user_name;
+    for (; *sh->user_name != '/'; ++sh->user_name);
+    ++sh->user_name;
     signal(SIGINT, sigint);
     pid = fork();
     if (pid == 0)

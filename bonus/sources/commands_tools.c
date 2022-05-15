@@ -13,11 +13,11 @@ char **wait_commands(shell_t *sh)
     char **re;
     size_t line_size = 0;
     char **history = received_input();
+    special_output(sh);
     if (history != NULL) {
         buf = super_getline(history);
         line_size = strlen(buf);
     } else {
-        printf("Rob1 > ");
         line_size = getline(&buf, &line_size, stdin);
         if (line_size == -1)
             exit(0);

@@ -28,7 +28,9 @@ SRC	=	sources/main.c	\
 		sources/myshrc_gestion.c	\
 		sources/pars_alias.c	\
 		sources/super_getline/super_getline.c	\
-		sources/super_getline/get_history.c
+		sources/super_getline/get_history.c	\
+		sources/super_getline/output_line.c
+
 
 
 SRC_T =	sources/commands.c	\

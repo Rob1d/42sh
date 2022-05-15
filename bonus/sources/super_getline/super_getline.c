@@ -65,6 +65,11 @@ static history_t *init_history(char **history)
 static void super_getline_red(char c, int *i, char *password, int *check)
 {
     int tmp_i = *i;
+    if (c == '\t') {
+        *check = 1;
+        write(1, "\r", 1);
+        tmp_i = 0;
+    }
     if ((c == 127 || c == 8)) {
         for (int a = 0; a < (tmp_i != 0 ? 3 : 2); ++a)
             write(1, "\b \b", 3);
@@ -115,7 +120,6 @@ char *super_getline(char **history)
         perror("tcsetattr");
         return (NULL);
     }
-    printf("Rob1 > ");
     ret = real_get(history);
     if (tcsetattr( STDIN_FILENO, TCSANOW, &oldt) != 0) {
         perror("tcsetattr");
@@ -123,19 +127,3 @@ char *super_getline(char **history)
     }
     return ret;
 }
-
-/*
-int main(void)
-{
-    char **history;
-    history = malloc(sizeof(char *) * 4);
-    history[0] = strdup("ls");
-    history[1] = strdup("cd");
-    history[2] = strdup("echo lol");
-    history[3] = NULL;
-    char *get = super_getline(history);
-    printf("%s\n", get);
-    free(get);
-    return 0;
-}
-*/
