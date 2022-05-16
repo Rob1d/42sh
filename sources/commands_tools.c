@@ -19,7 +19,7 @@ char **wait_commands(shell_t *sh)
     buf[line_size - 1] = '\0';
     if (line_size == 1)
         buf = "ui";
-    write_to_rc(buf);
+    write_to_rc(buf, sh);
     re = semicolon(buf, sh, 0, 0);
     return re;
 }

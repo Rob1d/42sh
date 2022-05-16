@@ -7,10 +7,11 @@
 
 #include "../includes/minishell.h"
 
-bool set_alias(char **value)
+bool set_alias(char **value, shell_t *sh)
 {
     FILE *fp;
     int i = 0;
+    char *name_f;
     if (!is_str_equal(value[0], "setalias"))
         return false;
     for (; value[i] != NULL; ++i);
@@ -18,7 +19,8 @@ bool set_alias(char **value)
         fprintf(stderr, "setalias: Too many arguments.\n");
         return 1;
     }
-    fp = fopen("myshrc", "a");
+    name_f = str_concat(str_concat(sh->cd_params->user, "/"), "myshrc");
+    fp = fopen(name_f, "a");
     fprintf(fp, "alias %s=\"%s\"\n", value[1], value[2]);
     fclose(fp);
     return true;

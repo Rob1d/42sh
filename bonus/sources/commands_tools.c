@@ -12,7 +12,7 @@ char **wait_commands(shell_t *sh)
     char *buf = NULL;
     char **re;
     size_t line_size = 0;
-    char **history = received_input();
+    char **history = received_input(sh);
     special_output(sh);
     if (history != NULL) {
         buf = super_getline(history, sh);
@@ -25,7 +25,7 @@ char **wait_commands(shell_t *sh)
     }
     if (line_size == 1)
         buf = "ui";
-    write_to_rc(buf);
+    write_to_rc(buf, sh);
     re = semicolon(buf, sh, 0, 0);
     return re;
 }

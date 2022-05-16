@@ -32,7 +32,7 @@ static char *good_files(char *search)
     return NULL;
 }
 
-static char *str_concat(char *first, char *sec)
+char *str_concat(char *first, char *sec)
 {
     char *ret = malloc(sizeof(char) * (strlen(first) + strlen(sec)) + 1);
     int i = 0;

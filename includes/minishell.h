@@ -47,11 +47,12 @@ typedef struct {
     shell_t *sh;
 }pipe_t;
 
-bool set_alias(char **value);
+char *str_concat(char *first, char *sec);
+bool set_alias(char **value, shell_t *sh);
 char *read_last_line(char *line);
-char *as_alias(char *command);
+char *as_alias(char *command, shell_t *sh);
 char **parsing_alias(char *str);
-void write_to_rc(char *command);
+void write_to_rc(char *command, shell_t *sh);
 void no_acess(int file, char *n_file);
 bool is_builtin_name(char *str);
 bool is_builtin(pipe_t *ppt, int nb);

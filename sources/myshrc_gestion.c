@@ -34,13 +34,14 @@ char *extract_command_alias(char **alias, int i)
     return nw_command;
 }
 
-char *as_alias(char *command)
+char *as_alias(char *command, shell_t *sh)
 {
-    int file = open("myshrc", O_RDONLY);
+    char *name_f = str_concat(str_concat(sh->cd_params->user, "/"), "myshrc");
+    int file = open(name_f, O_RDONLY);
     struct stat rc_stat;
     char *buf;
     char **alias;
-    if (stat("myshrc", &rc_stat) == -1)
+    if (stat(name_f, &rc_stat) == -1)
         return command;
     buf = malloc(sizeof(char) * rc_stat.st_size + 1);
     read(file, buf, rc_stat.st_size);
@@ -73,9 +74,10 @@ char *read_last_line(char *line)
     return parsed[i - cp - 1];
 }
 
-void write_to_rc(char *command)
+void write_to_rc(char *command, shell_t *sh)
 {
-    int file = open("myshrc_h", O_APPEND | O_WRONLY);
+    char *name_f = str_concat(str_concat(sh->cd_params->user, "/"), "myshrc_h");
+    int file = open(name_f, O_APPEND | O_WRONLY | O_CREAT, 0664);
     if (file != -1) {
         write(file, command, str_len(command));
         write(file, "\n", 1);

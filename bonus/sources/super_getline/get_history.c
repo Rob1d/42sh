@@ -63,12 +63,12 @@ static char *without_comments(FILE *fp)
     return tmp;
 }
 
-char **received_input(void)
+char **received_input(shell_t *sh)
 {
     char **input = malloc(sizeof(char *) + 1);
-    if (input == NULL) return NULL;
-    FILE *fp = fopen("myshrc_h", "r");
-    if (fp == NULL) return NULL;
+    char *name_f = str_concat(str_concat(sh->cd_params->user, "/"), "myshrc_h");
+    FILE *fp = fopen(name_f, "r");
+    if (fp == NULL || input == NULL) return NULL;
     int cp = 0;
     char *tmp = without_comments(fp);
     while (tmp != NULL) {

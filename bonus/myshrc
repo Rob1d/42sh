@@ -1,4 +1,0 @@
-alias l="ls -l"
-alias non="yes > lol"
-alias review="echo hello world !"
-alias ratio="yes ratio ramsford"

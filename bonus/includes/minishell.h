@@ -55,11 +55,12 @@ typedef struct {
     shell_t *sh;
 }pipe_t;
 
-bool set_alias(char **value);
+char *str_concat(char *first, char *sec);
+char *as_alias(char *command, shell_t *sh);
+void write_to_rc(char *command, shell_t *sh);;
+bool set_alias(char **value, shell_t *sh);
 char *read_last_line(char *line);
-char *as_alias(char *command);
 char **parsing_alias(char *str);
-void write_to_rc(char *command);
 void no_acess(int file, char *n_file);
 bool is_builtin_name(char *str);
 bool is_builtin(pipe_t *ppt, int nb);
@@ -107,9 +108,9 @@ char **semicolon(char *command, shell_t *sh, int i, int cp);
 bool my_echo(char **env, char *line, char **pars, shell_t *sh);
 
 //super_getline
+char **received_input(shell_t *sh);
 char *autocompeltion(char *inital_line);
 char *super_getline(char **history, shell_t *sh);
-char **received_input(void);
 void free_array(char **array);
 void special_output(shell_t *sh);
 #endif
