@@ -21,7 +21,6 @@ bool set_alias(char **value)
     fp = fopen("myshrc", "a");
     fprintf(fp, "alias %s=\"%s\"\n", value[1], value[2]);
     fclose(fp);
-    printf("good !\n");
     return true;
 }
 
