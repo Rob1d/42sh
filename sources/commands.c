@@ -37,10 +37,14 @@ int launch_command(char **env, char **pars, shell_t *sh)
     int pid = 0;
     int rd = 0;
     char *command = as_path(env, pars[0]);
-    if (command[0] == '\0')
+    if (command[0] == '\0') {
+        sh->last_return = 0;
         return 1;
-    if (can_open(pars[0]))
+    }
+    if (can_open(pars[0])) {
+        sh->last_return = 1;
         return 1;
+    }
     pid = fork();
     if (pid == 0) {
         execve(command, pars, env);
