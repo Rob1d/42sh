@@ -24,6 +24,12 @@
     (c >= 'a' && c <= 'z') && c != '_')
     #include <termios.h>
 
+typedef struct sp_get_s {
+    int i;
+    int c;
+    int check;
+}sp_get_t;
+
 typedef struct history_s {
     int actual_history;
     char **history;
