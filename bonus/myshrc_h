@@ -363,3 +363,23 @@ exit
 ls sources	
 exi
 exit
+
+ui
+ls sources	
+ls includes	
+ls
+ls myshrc_h	
+ls -la sources	
+exit
+ls source 	
+exit
+ls sources	
+ls
+ui
+ls sources	
+myshrc_h	
+ui
+exit
+ls			
+ls sources	
+exit

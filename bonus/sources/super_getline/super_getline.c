@@ -80,6 +80,24 @@ static void super_getline_red(char c, int *i, char *password, int *check, shell_
     *i = tmp_i;
 }
 
+char *get_complete(char *password, int *i, int *check, shell_t *sh, char c)
+{
+    int tmp_i = *i;
+    if (c == '\t') {
+        *check = 1;
+        write(1, "\r", 1);
+        printf(" ");
+        special_output(sh);
+        password[tmp_i] = '\0';
+        password = autocompeltion(password);
+        tmp_i = strlen(password);
+        printf("%s", password);
+        password[strlen(password)] = ' ';
+    }
+    *i = tmp_i;
+    return password;
+}
+
 static char *real_get(char **history, shell_t *sh)
 {
     int c = 0;
@@ -89,17 +107,7 @@ static char *real_get(char **history, shell_t *sh)
     history_t *hs = init_history(history);
     char *password = malloc(sizeof(char) * size_malloc);
     while((c = getchar()) != '\n') {
-        if (c == '\t') {
-            check = 1;
-            write(1, "\r", 1);
-            printf(" ");
-            special_output(sh);
-            password[i] = '\0';
-            password = autocompeltion(password);
-            i = strlen(password);
-            printf("%s", password);
-            password[strlen(password)] = ' ';
-        }
+        password = get_complete(password, &i, &check, sh, c);
         check = check_arrows(hs, c, &i, &password);
         super_getline_red(c, &i, password, &check, sh);
         if (i >= (size_malloc) - 1) {
@@ -111,7 +119,6 @@ static char *real_get(char **history, shell_t *sh)
     for (int x = 0; hs->history[x] != NULL; ++x)
         free(hs->history[x]);
     free(hs->history);
-    free(hs);
     return password;
 }
 

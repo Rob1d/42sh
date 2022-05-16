@@ -55,7 +55,9 @@ char *autocompeltion(char *inital_line)
     concat_name = good_files(end_of_line);
     end_of_line -= i + 1;
     end_of_line[i + 1] = '\0';
-    if (concat_name != NULL)
+    if (concat_name != NULL) {
         end_of_line = str_concat(end_of_line, concat_name);
-    return end_of_line;
+        return end_of_line;
+    }
+    return inital_line;
 }
