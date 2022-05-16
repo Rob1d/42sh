@@ -62,14 +62,9 @@ static history_t *init_history(char **history)
     return hs;
 }
 
-static void super_getline_red(char c, int *i, char *password, int *check)
+static void super_getline_red(char c, int *i, char *password, int *check, shell_t *sh)
 {
     int tmp_i = *i;
-    if (c == '\t') {
-        *check = 1;
-        write(1, "\r", 1);
-        tmp_i = 0;
-    }
     if ((c == 127 || c == 8)) {
         for (int a = 0; a < (tmp_i != 0 ? 3 : 2); ++a)
             write(1, "\b \b", 3);
@@ -85,7 +80,7 @@ static void super_getline_red(char c, int *i, char *password, int *check)
     *i = tmp_i;
 }
 
-static char *real_get(char **history)
+static char *real_get(char **history, shell_t *sh)
 {
     int c = 0;
     int i = 0;
@@ -94,8 +89,19 @@ static char *real_get(char **history)
     history_t *hs = init_history(history);
     char *password = malloc(sizeof(char) * size_malloc);
     while((c = getchar()) != '\n') {
+        if (c == '\t') {
+            check = 1;
+            write(1, "\r", 1);
+            printf(" ");
+            special_output(sh);
+            password[i] = '\0';
+            password = autocompeltion(password);
+            i = strlen(password);
+            printf("%s", password);
+            password[strlen(password)] = ' ';
+        }
         check = check_arrows(hs, c, &i, &password);
-        super_getline_red(c, &i, password, &check);
+        super_getline_red(c, &i, password, &check, sh);
         if (i >= (size_malloc) - 1) {
             size_malloc += 128;
             password = (char *)realloc(password, sizeof(char) * size_malloc);
@@ -109,7 +115,7 @@ static char *real_get(char **history)
     return password;
 }
 
-char *super_getline(char **history)
+char *super_getline(char **history, shell_t *sh)
 {
     char *ret;
     static struct termios oldt, newt;
@@ -120,7 +126,7 @@ char *super_getline(char **history)
         perror("tcsetattr");
         return (NULL);
     }
-    ret = real_get(history);
+    ret = real_get(history, sh);
     if (tcsetattr( STDIN_FILENO, TCSANOW, &oldt) != 0) {
         perror("tcsetattr");
         return (NULL);

@@ -29,7 +29,8 @@ SRC	=	sources/main.c	\
 		sources/pars_alias.c	\
 		sources/super_getline/super_getline.c	\
 		sources/super_getline/get_history.c	\
-		sources/super_getline/output_line.c
+		sources/super_getline/output_line.c		\
+		sources/super_getline/completion.c
 
 
 

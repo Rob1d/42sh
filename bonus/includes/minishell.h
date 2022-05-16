@@ -107,7 +107,8 @@ char **semicolon(char *command, shell_t *sh, int i, int cp);
 bool my_echo(char **env, char *line, char **pars, shell_t *sh);
 
 //super_getline
-char *super_getline(char **history);
+char *autocompeltion(char *inital_line);
+char *super_getline(char **history, shell_t *sh);
 char **received_input(void);
 void free_array(char **array);
 void special_output(shell_t *sh);

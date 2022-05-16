@@ -15,7 +15,7 @@ char **wait_commands(shell_t *sh)
     char **history = received_input();
     special_output(sh);
     if (history != NULL) {
-        buf = super_getline(history);
+        buf = super_getline(history, sh);
         line_size = strlen(buf);
     } else {
         line_size = getline(&buf, &line_size, stdin);
