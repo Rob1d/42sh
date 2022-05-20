@@ -7,7 +7,50 @@
 
 #include "../includes/minishell.h"
 
-char **wait_commands(shell_t *sh)
+/*
+void read_command(char *command, int i)
+{
+    FILE *fd = fopen("tmp_file", "r");
+    char *buf = NULL;
+    size_t len = 0;
+    char *tmp
+}
+
+int change_backtricks(char *command, int i, char **env, shell_t *sh)
+{
+    char **pars;
+    char *tmp_command = strdup(command);
+    int j = 0;
+    int fd = open("tmp_file", O_CREAT | O_WRONLY, 0664);
+    int pid = 0;
+    ++i;
+    tmp_command += i;
+    for (; tmp_command[j] != '`' && tmp_command[j] != '\0'; ++j);
+    command[i] = ' ';
+    for (; command[i] != '`' && command[i] != '\0'; ++i)
+        command[i] = '\0';
+    tmp_command[j] = '\0';
+    pars = parsing(command);
+    pid = fork();
+    if (pid == 0) {
+        dup2(STDOUT_FILENO, fd);
+        launch_command(env, pars, sh);
+    }
+    waitpid(pid, &j, 0);
+    close(fd);
+    return i + j;
+}
+
+char *check_bactricks(char *command, char **env, shell_t *sh)
+{
+    for (int i = 0; command[i] != '\0'; i++)
+        if (command[i] == '`')
+            i = change_backtricks(command, i, env);
+    return command;
+}
+
+*/
+char **wait_commands(shell_t *sh, char **env)
 {
     char *buf = NULL;
     char **re;
@@ -46,7 +89,7 @@ static void other_signal_check(int rd)
         if (WSTOPSIG(rd) == SIGSEGV)
             my_put_str_er("Segmentation fault");
         if (WSTOPSIG(rd) == SIGFPE)
-            my_put_str_er("Floating point exception");
+            my_put_str_er("Floating exception");
         if (WSTOPSIG(rd) == SIGILL)
             my_put_str_er("Illegal instruction");
         if (WSTOPSIG(rd) == SIGABRT)
@@ -65,7 +108,7 @@ void verify_return(int rd)
         if (WTERMSIG(rd) == SIGSEGV)
             my_put_str_er("Segmentation fault");
         if (WTERMSIG(rd) == SIGFPE)
-            my_put_str_er("Floating point exception");
+            my_put_str_er("Floating exception");
         if (WTERMSIG(rd) == SIGILL)
             my_put_str_er("Illegal instruction");
         if (WTERMSIG(rd) == SIGABRT)

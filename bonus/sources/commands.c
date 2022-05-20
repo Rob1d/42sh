@@ -32,16 +32,6 @@ void error_acess(char *pars)
     my_put_str_er(": Command not found.\n");
 }
 
-char **add_color(char **array)
-{
-    int i = 0;
-    for (; array[i] != NULL; ++i);
-    array = realloc(array, sizeof(char *) * (i + 2));
-    array[i] = "--color=auto";
-    array[i + 1] = NULL;
-    return array;
-}
-
 int launch_command(char **env, char **pars, shell_t *sh)
 {
     int pid = 0;
@@ -53,7 +43,6 @@ int launch_command(char **env, char **pars, shell_t *sh)
         return 1;
     pid = fork();
     if (pid == 0) {
-        pars = add_color(pars);
         execve(command, pars, env);
         if (errno == ENOEXEC)
             my_put_str_er("Exec format error. Wrong Architecture.\n");

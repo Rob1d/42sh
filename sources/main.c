@@ -19,12 +19,6 @@ void sigint(int sig)
         exit(0);
 }
 
-static void change_base_values(shell_t *sh, char **env)
-{
-    char *new_term[] = {"setenv", "TERM", "42sh", NULL};
-    set_env(env, new_term, sh);
-}
-
 int main(int av, char **argc, char **env)
 {
     char **new_env = env;
@@ -38,7 +32,6 @@ int main(int av, char **argc, char **env)
     sh->len_separator = 0;
     sh->separator_type = malloc(sizeof(int));
     path_to_home(sh->cd_params->user);
-    change_base_values(sh, env);
     signal(SIGINT, sigint);
     pid = fork();
     if (pid == 0)

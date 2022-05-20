@@ -94,8 +94,7 @@ char *get_complete(char *password, shell_t *sh, sp_get_t *sgt)
     int tmp_i = sgt->i;
     if (sgt->c == '\t') {
         sgt->check = 1;
-        write(1, "\r", 1);
-        printf(" ");
+        printf("\r");
         special_output(sh);
         password[tmp_i] = '\0';
         password = autocompeltion(password);

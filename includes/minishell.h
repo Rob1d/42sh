@@ -74,7 +74,7 @@ int minus_cd(shell_t *sh, char **env);
 void my_put_str_er(char *str);
 void verify_return(int rd);
 char *put_bin(char *command);
-char **wait_commands(shell_t *sh);
+char **wait_commands(shell_t *sh, char **env);
 int path_to_home(char *cwd);
 int search_in_env(char **env, char *set);
 int unset_loop(char **env, char **pars);

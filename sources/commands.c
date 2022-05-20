@@ -81,7 +81,7 @@ int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
 
 int verify_command(char **env, shell_t *sh)
 {
-    char **line = wait_commands(sh);
+    char **line = wait_commands(sh, env);
     if (sh->len_separator == 0) {
         process_commands(line[0], env, sh, false);
         free(line[0]);

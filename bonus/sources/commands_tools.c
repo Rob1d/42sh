@@ -7,6 +7,25 @@
 
 #include "../includes/minishell.h"
 
+int change_backtricks(char *command, int i)
+{
+    char *tmp_command = strdup(command);
+    int j = 0;
+    ++i;
+    tmp_command += i;
+    for (; tmp_command[j] != '`' && tmp_command[j] != '\0'; ++j);
+    tmp_command[j] = '\0';
+    printf("tmp_command %s\n", tmp_command);
+    return i + j;
+}
+char *check_bactricks(char *command)
+{
+    for (int i = 0; command[i] != '\0'; i++)
+        if (command[i] == '`')
+            i = change_backtricks(command, i);
+    return command;
+}
+
 char **wait_commands(shell_t *sh)
 {
     char *buf = NULL;
@@ -26,6 +45,7 @@ char **wait_commands(shell_t *sh)
     if (line_size == 1)
         buf = "ui";
     write_to_rc(buf, sh);
+    buf = check_bactricks(buf);
     re = semicolon(buf, sh, 0, 0);
     return re;
 }
