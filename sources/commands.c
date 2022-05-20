@@ -21,8 +21,6 @@ int can_open(char *str)
     my_put_str_er(str);
     my_put_str_er(": Permission denied.\n");
     closedir(directory);
-    if (str[0] != '.' && str[1] != '/')
-        *str -= 2;
     return 1;
 }
 

@@ -49,6 +49,20 @@ char *concat_commands(char *command, char *path)
     return tmp;
 }
 
+static bool start_with_path(char *tmp, char **env)
+{
+    int cp = str_len(tmp);
+    char *tmp_str = strdup(tmp);
+    if (tmp[0] == '/') return false;
+    for (; cp > 0 && tmp[cp] != '/'; --cp);
+    if (cp == 0) return false;
+    tmp_str[cp] = '\0';
+    for (int i = 0; env[i] != NULL; ++i)
+        if (is_str_equal(env[i], tmp_str))
+            return false;
+    return true;
+}
+
 char *as_path(char **env, char *command)
 {
     int len = 0;
@@ -57,10 +71,10 @@ char *as_path(char **env, char *command)
     for (; (env[len][0] != 'P' || env[len][1] != 'A' || env[len]
     [2] != 'T' || env[len][3] != 'H') && env[len] != NULL; ++len);
     if (env[len] == NULL)
-        return 0;
+        return NULL;
     path = parsing_path(env[len]);
     nb_path = witch_env(command, path);
-    if (nb_path != -1)
+    if (nb_path != -1 && !start_with_path(command, path))
         return concat_commands(command, path[nb_path]);
     if (!access(command, F_OK))
         return command;
