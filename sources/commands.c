@@ -11,18 +11,18 @@ int can_open(char *str)
 {
     char *new_str = malloc(sizeof(char) * strlen(str) + 1);
     DIR *directory;
-    int i = 2;
-    if (str[0] != '.' || str[1] != '/')
-        return 0;
+    int i = 0;
     for (; str[i] != '\0'; ++i)
-        new_str[i - 2] = str[i];
-    new_str[i - 2] = '\0';
+        new_str[i] = str[i];
+    new_str[i] = '\0';
     directory = opendir(new_str);
     if (directory == NULL)
         return 0;
     my_put_str_er(str);
     my_put_str_er(": Permission denied.\n");
     closedir(directory);
+    if (str[0] != '.' && str[1] != '/')
+        *str -= 2;
     return 1;
 }
 
