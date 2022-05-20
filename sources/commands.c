@@ -64,7 +64,7 @@ int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
     if (right_redirection(line, env, sh)) return 1;
     if (pipe_gestion(line, env, sh)) return 1;
     pars = parsing(line);
-    if (set_alias(pars, sh)) return 1;
+    if (set_alias(pars, sh, line)) return 1;
     if (my_echo(env, line, pars, sh)) return 1;
     if (is_builtin_name(pars[0]) && is_piped) return 1;
     (is_str_equal(pars[0], "exit")) ? exit(0) : 0;

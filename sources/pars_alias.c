@@ -20,21 +20,26 @@ char *str_concat(char *first, char *sec)
     return ret;
 }
 
-bool set_alias(char **value, shell_t *sh)
+bool set_alias(char **value, shell_t *sh, char *line)
 {
     FILE *fp;
     int i = 0;
+    int y = 0;
     char *name_f;
-    if (!is_str_equal(value[0], "setalias"))
-        return false;
-    for (; value[i] != NULL; ++i);
-    if (i != 3) {
-        fprintf(stderr, "setalias: Too many arguments.\n");
-        return 1;
-    }
+    char *name_alias;
+    char *value_alias;
+    if (!is_str_equal(value[0], "alias")) return false;
+    name_alias = strdup(line);
+    for (; *name_alias != ' ' && *name_alias != '\0'; ++name_alias, ++i);
+    ++i;
+    ++name_alias;
+    for(; name_alias[y] != ' ' && name_alias[y] != '\0'; ++i, ++y);
+    name_alias[y] = '\0';
+    ++i;
+    value_alias = strdup(line) + i;
     name_f = str_concat(str_concat(sh->cd_params->user, "/"), "myshrc");
     fp = fopen(name_f, "a");
-    fprintf(fp, "alias %s=\"%s\"\n", value[1], value[2]);
+    fprintf(fp, "alias %s=\"%s\"\n", name_alias, value_alias);
     fclose(fp);
     return true;
 }

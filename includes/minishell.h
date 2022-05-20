@@ -48,7 +48,7 @@ typedef struct {
 }pipe_t;
 
 char *str_concat(char *first, char *sec);
-bool set_alias(char **value, shell_t *sh);
+bool set_alias(char **value, shell_t *sh, char *line);
 char *read_last_line(char *line);
 char *as_alias(char *command, shell_t *sh);
 char **parsing_alias(char *str);
