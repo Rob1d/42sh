@@ -45,7 +45,7 @@ char **wait_commands(shell_t *sh)
     if (line_size == 1)
         buf = "ui";
     write_to_rc(buf, sh);
-    buf = check_bactricks(buf);
+    //buf = check_bactricks(buf);
     re = semicolon(buf, sh, 0, 0);
     return re;
 }

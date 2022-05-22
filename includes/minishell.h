@@ -22,6 +22,19 @@
     #include <sys/stat.h>
     #define IS_LETTER(c) ((c >= 'A' && c <= 'Z') ||\
     (c >= 'a' && c <= 'z') && c != '_')
+    #include <termios.h>
+
+typedef struct sp_get_s {
+    int i;
+    int c;
+    int check;
+}sp_get_t;
+
+typedef struct history_s {
+    int actual_history;
+    char **history;
+    int len;
+}history_t;
 
 typedef struct {
     char *old_cd;
@@ -36,6 +49,8 @@ typedef struct shell_s {
     int *separator_type;
     int len_separator;
     cd *cd_params;
+    bool all_mode;
+    char *user_name;
 }shell_t;
 
 typedef struct {
@@ -98,4 +113,10 @@ char *as_path(char **env, char *command);
 char **semicolon(char *command, shell_t *sh, int i, int cp);
 //my echo
 bool my_echo(char **env, char *line, char **pars, shell_t *sh);
+//super_getline
+char **received_input(shell_t *sh);
+char *autocompeltion(char *inital_line);
+char *super_getline(char **history, shell_t *sh);
+void free_array(char **array);
+void special_output(shell_t *sh);
 #endif

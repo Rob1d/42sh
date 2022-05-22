@@ -55,14 +55,21 @@ char **wait_commands(shell_t *sh, char **env)
     char *buf = NULL;
     char **re;
     size_t line_size = 0;
-    write(1, "Rob1 > ", 7);
-    line_size = getline(&buf, &line_size, stdin);
-    if (line_size == -1)
-        exit(0);
-    buf[line_size - 1] = '\0';
+    char **history = received_input(sh);
+    sh->all_mode ? special_output(sh) : printf("42sh > ");
+    if (history != NULL && sh->all_mode) {
+        buf = super_getline(history, sh);
+        line_size = strlen(buf);
+    } else {
+        line_size = getline(&buf, &line_size, stdin);
+        if (line_size == -1)
+            exit(0);
+        buf[line_size - 1] = '\0';
+    }
     if (line_size == 1)
         buf = "ui";
     write_to_rc(buf, sh);
+    //buf = check_bactricks(buf);
     re = semicolon(buf, sh, 0, 0);
     return re;
 }

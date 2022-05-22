@@ -26,7 +26,11 @@ SRC	=	sources/main.c	\
 		sources/builtins_tools.c	\
 		sources/my_echo.c	\
 		sources/myshrc_gestion.c	\
-		sources/pars_alias.c
+		sources/pars_alias.c	\
+		sources/super_getline/super_getline.c	\
+		sources/super_getline/get_history.c	\
+		sources/super_getline/output_line.c		\
+		sources/super_getline/completion.c
 
 
 SRC_T =	sources/commands.c	\
@@ -49,7 +53,11 @@ SRC_T =	sources/commands.c	\
 		sources/builtins_tools.c	\
 		sources/my_echo.c	\
 		sources/myshrc_gestion.c	\
-		sources/pars_alias.c
+		sources/pars_alias.c	\
+		sources/super_getline/super_getline.c	\
+		sources/super_getline/get_history.c	\
+		sources/super_getline/output_line.c		\
+		sources/super_getline/completion.c
 
 
 
