@@ -70,7 +70,6 @@ OBJ	=	$(SRC:.c=.o)
 CFLAGS += -g
 
 all: ${NAME}
-	make -C bonus
 
 $(NAME): $(OBJ)
 	gcc $(LIB) -o $(NAME) $(OBJ)
@@ -78,11 +77,9 @@ $(NAME): $(OBJ)
 clean:
 	rm -f $(OBJ)
 	rm -f unit_tests*
-	make clean -C bonus
 
 fclean:	clean
 	rm -f $(NAME)
-	make fclean -C bonus
 
 
 git: fclean

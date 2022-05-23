@@ -9,7 +9,7 @@
 
 char *str_concat(char *first, char *sec)
 {
-    char *ret = malloc(sizeof(char) * (strlen(first) + strlen(sec)) + 1);
+    char *ret = malloc(sizeof(char) * (str_len(first) + str_len(sec)) + 1);
     int i = 0;
     int j = 0;
     for (; first[i] != '\0'; ++i)

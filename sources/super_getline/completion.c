@@ -17,14 +17,24 @@ static bool str_start_with(char *str, char *start)
     return true;
 }
 
+static int file_name_len(char file[255])
+{
+    for (int i = 0; i < 255; ++i)
+        if (!IS_FILE_NAME(file[i]))
+            return i;
+    return 255;
+}
+
 static char *good_files(char *search)
 {
+    char *ret;
     DIR *dir = opendir(".");
     struct dirent *tmp = readdir(dir);
     while (tmp != NULL) {
         if (str_start_with(tmp->d_name, search)) {
+            ret = strdup(tmp->d_name);
             closedir(dir);
-            return tmp->d_name;
+            return ret;
         }
         tmp = readdir(dir);
     }
@@ -43,7 +53,9 @@ char *autocompeltion(char *inital_line)
     end_of_line -= i + 1;
     end_of_line[i + 1] = '\0';
     if (concat_name != NULL) {
+        concat_name[file_name_len(concat_name)] = '\0';
         end_of_line = str_concat(end_of_line, concat_name);
+        end_of_line = realloc(end_of_line, sizeof(char) * 128);
         return end_of_line;
     }
     return inital_line;

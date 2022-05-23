@@ -30,6 +30,22 @@ void error_acess(char *pars)
     my_put_str_er(": Command not found.\n");
 }
 
+char **command_with_color(char **pars, shell_t *sh)
+{
+    char *commands[] = {"ls", "grep", NULL};
+    int j = 0;
+    if (!sh->all_mode) return pars;
+    for (; pars[j] != NULL; ++j);
+    for (int i = 0; commands[i] != NULL; ++i)
+        if (is_str_equal(pars[0], commands[i])) {
+            pars = realloc(pars, sizeof(char *) * (j + 2));
+            pars[j] = "--color=auto";
+            pars[j + 1] = NULL;
+            return pars;
+        }
+    return pars;
+}
+
 int launch_command(char **env, char **pars, shell_t *sh)
 {
     int pid = 0;
@@ -43,6 +59,7 @@ int launch_command(char **env, char **pars, shell_t *sh)
         sh->last_return = 1;
         return 1;
     }
+    pars = command_with_color(pars, sh);
     pid = fork();
     if (pid == 0) {
         execve(command, pars, env);

@@ -22,6 +22,8 @@
     #include <sys/stat.h>
     #define IS_LETTER(c) ((c >= 'A' && c <= 'Z') ||\
     (c >= 'a' && c <= 'z') && c != '_')
+    #define IS_FILE_NAME(c) ((c >= 'A' && c <= 'Z') ||\
+    (c >= 'a' && c <= 'z') || c == '_')
     #include <termios.h>
 
 typedef struct sp_get_s {
