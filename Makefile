@@ -92,4 +92,3 @@ tests_run : fclean
 	./unit_tests
 
 re:	fclean all
-	make re -C bonus

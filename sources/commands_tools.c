@@ -7,49 +7,72 @@
 
 #include "../includes/minishell.h"
 
-/*
-void read_command(char *command, int i)
+void read_command(backticks_t *bck)
 {
-    FILE *fd = fopen("tmp_file", "r");
+    int fd = open(".tmp_file", O_RDONLY);
+    struct stat st;
     char *buf = NULL;
     size_t len = 0;
-    char *tmp
+    stat(".tmp_file", &st);
+    buf = malloc(sizeof(char) * st.st_size + 1);
+    len = read(fd, buf, st.st_size);
+    buf[len] = '\0';
+    remove(".tmp_file");
+    for (int j = 0; buf[j] != '\0'; ++j)
+        if (buf[j] == '\n')
+            buf[j] = ' ';
+    bck->command[strlen(bck->command) - 1] = '\0';
+    bck->command = realloc(bck->command,
+    sizeof(char) * (strlen(bck->command) * strlen(buf)) + 2);
+    sprintf(bck->command, "%s%s%s", bck->command, buf, bck->end_command);
 }
 
-int change_backtricks(char *command, int i, char **env, shell_t *sh)
+int change_backtricks(backticks_t *bck, char **env, shell_t *sh)
 {
     char **pars;
-    char *tmp_command = strdup(command);
+    char *tmp_command = strdup(bck->command);
     int j = 0;
-    int fd = open("tmp_file", O_CREAT | O_WRONLY, 0664);
+    int fd = open(".tmp_file", O_CREAT | O_WRONLY, 0664);
     int pid = 0;
-    ++i;
-    tmp_command += i;
+    int rd = 0;
+    bck->command[bck->i++] = ' ';
+    tmp_command += bck->i;
+    for (; bck->command[bck->i] != '`' && bck->command[bck->i] != '\0'; ++bck->i)
+        bck->command[bck->i] = ' ';
+    bck->command[bck->i] = '\0';
+    printf("%s\n", bck->command);
     for (; tmp_command[j] != '`' && tmp_command[j] != '\0'; ++j);
-    command[i] = ' ';
-    for (; command[i] != '`' && command[i] != '\0'; ++i)
-        command[i] = '\0';
     tmp_command[j] = '\0';
-    pars = parsing(command);
+    pars = parsing(tmp_command);
     pid = fork();
     if (pid == 0) {
-        dup2(STDOUT_FILENO, fd);
+        dup2(fd, STDOUT_FILENO);
         launch_command(env, pars, sh);
+        exit(0);
     }
-    waitpid(pid, &j, 0);
+    waitpid(pid, &rd, 0);
     close(fd);
-    return i + j;
+    return bck->i;
 }
 
 char *check_bactricks(char *command, char **env, shell_t *sh)
 {
-    for (int i = 0; command[i] != '\0'; i++)
-        if (command[i] == '`')
-            i = change_backtricks(command, i, env);
-    return command;
+    backticks_t bck;
+    int i = 0;
+    bck.i = 0;
+    bck.command = strdup(command);
+    for (; command[i] != '\0'; ++i)
+        if (command[i] == '`') {
+            bck.i = i;
+            bck.end_command = strdup(bck.command);
+            i = change_backtricks(&bck, env, sh);
+            bck.end_command += i + 1;
+            printf("end_comm = %s i = %d\n", bck.end_command, i);
+            read_command(&bck);
+        }
+    return bck.command;
 }
 
-*/
 char **wait_commands(shell_t *sh, char **env)
 {
     char *buf = NULL;
@@ -69,7 +92,7 @@ char **wait_commands(shell_t *sh, char **env)
     if (line_size == 1)
         buf = "ui";
     write_to_rc(buf, sh);
-    //buf = check_bactricks(buf);
+    buf = check_bactricks(buf, env, sh);
     re = semicolon(buf, sh, 0, 0);
     return re;
 }
