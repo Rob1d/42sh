@@ -24,6 +24,12 @@
     (c >= 'a' && c <= 'z') && c != '_')
     #include <termios.h>
 
+typedef struct if_params_s {
+    char *params[2];
+    char *equality_type;
+    bool res;
+}if_params_t;
+
 typedef struct backticks_s {
     int i;
     char *command;
@@ -120,10 +126,14 @@ char *as_path(char **env, char *command);
 char **semicolon(char *command, shell_t *sh, int i, int cp);
 //my echo
 bool my_echo(char **env, char *line, char **pars, shell_t *sh);
+bool str_star_with(char *str, char *str_start);
 //super_getline
 char **received_input(shell_t *sh);
 char *autocompeltion(char *inital_line);
 char *super_getline(char **history, shell_t *sh);
 void free_array(char **array);
 void special_output(shell_t *sh);
+
+//check_if
+int if_statement(char *command, char **env, shell_t *sh);
 #endif

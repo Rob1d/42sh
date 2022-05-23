@@ -97,22 +97,28 @@ int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
 int verify_command(char **env, shell_t *sh)
 {
     char **line = wait_commands(sh, env);
+    int tmp = if_statement(line[0], env, sh);
     if (sh->len_separator == 0) {
+        line[0] += tmp;
+        line[0] = line[0][0] == '\0' ? strdup("ui") : line[0];
         process_commands(line[0], env, sh, false);
-        free(line[0]);
-        free(line);
+        line[0] -= is_str_equal(line[0], "ui") ? 0 : tmp;
+        free(line[0]);free(line);
         return 1;
     }
     for (int i = 0; i <= sh->len_separator; ++i) {
-        if (i == 0 || sh->separator_type[i - 1] == 0 ||
+        tmp = if_statement(line[i], env, sh);
+        if (((i == 0 || sh->separator_type[i - 1] == 0 ||
         (sh->separator_type[i - 1] == 1 && sh->last_return != 0) ||
-        (sh->separator_type[i - 1] == 2 && sh->last_return == 0))
+        (sh->separator_type[i - 1] == 2 && sh->last_return == 0)))) {
+            line[i] += tmp;
+            line[i] = line[i][0] == '\0' ? strdup("ui") : line[i];
             process_commands(line[i], env, sh, false);
+            line[i] -= is_str_equal(line[i], "ui") ? 0 : tmp;
+        }
         free(line[i]);
     }
-    free(line);
-    sh->len_separator = 0;
-    free(sh->separator_type);
+    free(line);sh->len_separator = 0;free(sh->separator_type);
     sh->separator_type = malloc(sizeof(int));
     return 0;
 }

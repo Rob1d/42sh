@@ -7,7 +7,7 @@
 
 #include "../includes/minishell.h"
 
-static bool str_star_with(char *str, char *str_start)
+bool str_star_with(char *str, char *str_start)
 {
     int i = 0;
     if (str_len(str) < str_len(str_start))
@@ -94,10 +94,8 @@ bool my_echo(char **env, char *line, char **pars, shell_t *sh)
                 printf("%c", line[i]);
             if (line[i] == '\0') break;
         }
-        printf("\n");
-        exit(0);
+        printf("\n");exit(0);
     }
-    waitpid(pid, &rd, 0);
-    sh->last_return = WIFEXITED(rd) ? WEXITSTATUS(rd) : 1;
+    waitpid(pid, &rd, 0);sh->last_return = WIFEXITED(rd) ? WEXITSTATUS(rd) : 1;
     return 1;
 }
