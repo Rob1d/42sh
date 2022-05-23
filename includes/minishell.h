@@ -68,6 +68,7 @@ typedef struct {
     shell_t *sh;
 }pipe_t;
 
+char *check_bactricks(char *command, char **env, shell_t *sh);
 char *str_concat(char *first, char *sec);
 bool set_alias(char **value, shell_t *sh, char *line);
 char *read_last_line(char *line);
