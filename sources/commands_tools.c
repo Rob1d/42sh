@@ -13,7 +13,7 @@ char **wait_commands(shell_t *sh, char **env)
     char **re;
     size_t line_size = 0;
     char **history = received_input(sh);
-    sh->all_mode ? special_output(sh) : printf("42sh > ");
+    sh->all_mode ? special_output(sh) : 0;
     if (history != NULL && sh->all_mode) {
         buf = super_getline(history, sh);
         line_size = strlen(buf);

@@ -29,6 +29,20 @@ static bool choose_equality(if_params_t *ipt)
     return false;
 }
 
+static bool get_statement_red(if_params_t *ipt, char **env, shell_t *sh)
+{
+    if (ipt->params[1][0] == '$') {
+        ++ipt->params[1];
+        for (int i = 0; env[i] != NULL; ++i)
+            ipt->params[1] = str_star_with(env[i],
+            ipt->params[1]) ? strdup(env[i]) : ipt->params[1];
+        for (; *ipt->params[1] != '=' &&
+        *ipt->params[1] != '\0'; ++ipt->params[1]);
+        *ipt->params[1] != '\0' ? ++ipt->params[1] : 0;
+    }
+    return choose_equality(ipt);
+}
+
 static bool get_statement(if_params_t *ipt, char **env, shell_t *sh)
 {
     if (ipt->params[0][0] == '"') {
@@ -40,18 +54,13 @@ static bool get_statement(if_params_t *ipt, char **env, shell_t *sh)
     if (ipt->params[0][0] == '$') {
         ++ipt->params[0];
         for (int i = 0; env[i] != NULL; ++i)
-            ipt->params[0] = str_star_with(env[i], ipt->params[0]) ? strdup(env[i]) : ipt->params[0];
-        for (; *ipt->params[0] != '=' && *ipt->params[0] != '\0'; ++ipt->params[0]);
+            ipt->params[0] = str_star_with(env[i],
+            ipt->params[0]) ? strdup(env[i]) : ipt->params[0];
+        for (; *ipt->params[0] != '=' &&
+        *ipt->params[0] != '\0'; ++ipt->params[0]);
         *ipt->params[0] != '\0' ? ++ipt->params[0] : 0;
     }
-    if (ipt->params[1][0] == '$') {
-        ++ipt->params[1];
-        for (int i = 0; env[i] != NULL; ++i)
-            ipt->params[1] = str_star_with(env[i], ipt->params[1]) ? strdup(env[i]) : ipt->params[1];
-        for (; *ipt->params[1] != '=' && *ipt->params[1] != '\0'; ++ipt->params[1]);
-        *ipt->params[1] != '\0' ? ++ipt->params[1] : 0;
-    }
-    return choose_equality(ipt);
+    return get_statement_red(ipt, env, sh);
 }
 
 int if_statement(char *command, char **env, shell_t *sh)
