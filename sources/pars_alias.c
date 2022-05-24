@@ -7,17 +7,18 @@
 
 #include "../includes/minishell.h"
 
-char *str_concat(char *first, char *sec)
+void set_alias_red(char *line, int i, shell_t *sh, char *name_alias)
 {
-    char *ret = malloc(sizeof(char) * (str_len(first) + str_len(sec)) + 1);
-    int i = 0;
-    int j = 0;
-    for (; first[i] != '\0'; ++i)
-        ret[i] = first[i];
-    for (; sec[j] != '\0'; ++j)
-        ret[i + j] = sec[j];
-    ret[i + j] = '\0';
-    return ret;
+    char *value_alias = strdup(line) + i;
+    char *tmp_f = str_concat(sh->cd_params->user, "/");
+    char *name_f = str_concat(tmp_f, "myshrc");
+    FILE *fp = fopen(name_f, "a");
+    fprintf(fp, "alias %s=\"%s\"\n", name_alias, value_alias);
+    fclose(fp);
+    value_alias -= i;
+    free(value_alias);
+    free(tmp_f);
+    free(name_f);
 }
 
 bool set_alias(char **value, shell_t *sh, char *line)
@@ -28,6 +29,7 @@ bool set_alias(char **value, shell_t *sh, char *line)
     char *name_f;
     char *name_alias;
     char *value_alias;
+    char *tmp_f;
     if (!is_str_equal(value[0], "alias")) return false;
     name_alias = strdup(line);
     for (; *name_alias != ' ' && *name_alias != '\0'; ++name_alias, ++i);
@@ -36,20 +38,10 @@ bool set_alias(char **value, shell_t *sh, char *line)
     for(; name_alias[y] != ' ' && name_alias[y] != '\0'; ++i, ++y);
     name_alias[y] = '\0';
     ++i;
-    value_alias = strdup(line) + i;
-    name_f = str_concat(str_concat(sh->cd_params->user, "/"), "myshrc");
-    fp = fopen(name_f, "a");
-    fprintf(fp, "alias %s=\"%s\"\n", name_alias, value_alias);
-    fclose(fp);
+    set_alias_red(line, i, sh, name_alias);
     return true;
 }
 
-int len_spaces_alias(char *str, int i)
-{
-    while ((str[i] == '\n' || str[i] == 9) && str[i] != '\0')
-        ++i;
-    return i;
-}
 
 int count_words_alias(char *str)
 {

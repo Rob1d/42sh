@@ -24,52 +24,25 @@ int can_open(char *str)
     return 1;
 }
 
-void error_acess(char *pars)
-{
-    my_put_str_er(pars);
-    my_put_str_er(": Command not found.\n");
-}
-
-char **command_with_color(char **pars, shell_t *sh)
-{
-    char *commands[] = {"ls", "grep", NULL};
-    int j = 0;
-    if (!sh->all_mode) return pars;
-    for (; pars[j] != NULL; ++j);
-    for (int i = 0; commands[i] != NULL; ++i)
-        if (is_str_equal(pars[0], commands[i])) {
-            pars = realloc(pars, sizeof(char *) * (j + 2));
-            pars[j] = "--color=auto";
-            pars[j + 1] = NULL;
-            return pars;
-        }
-    return pars;
-}
-
 int launch_command(char **env, char **pars, shell_t *sh)
 {
     int pid = 0;
     int rd = 0;
     char *command = as_path(env, pars[0]);
     if (command[0] == '\0') {
-        sh->last_return = 0;
-        return 1;
+        sh->last_return = 0;return 1;
     }
     if (can_open(pars[0])) {
-        sh->last_return = 1;
-        return 1;
+        sh->last_return = 1;return 1;
     }
-    pars = command_with_color(pars, sh);
-    pid = fork();
+    pars = command_with_color(pars, sh);pid = fork();
     if (pid == 0) {
         execve(command, pars, env);
-        if (errno == ENOEXEC)
-            my_put_str_er("Exec format error. Wrong Architecture.\n");
+        (errno == ENOEXEC) ? fprintf(stderr, "%s: "
+        "Exec format error. Wrong Architecture.\n", pars[0]) : 0;
     }
-    if (waitpid(pid, &rd, WUNTRACED) == -1)
-        exit(84);
-    sh->last_return = WIFEXITED(rd) ? WEXITSTATUS(rd) : 1;
-    verify_return(rd);
+    (waitpid(pid, &rd, WUNTRACED) == -1) ? exit(84) : 0;
+    sh->last_return = WIFEXITED(rd) ? WEXITSTATUS(rd) : 1;verify_return(rd);
     return 0;
 }
 
@@ -98,14 +71,6 @@ int verify_command(char **env, shell_t *sh)
 {
     char **line = wait_commands(sh, env);
     int tmp = if_statement(line[0], env, sh);
-    if (sh->len_separator == 0) {
-        line[0] += tmp;
-        line[0] = line[0][0] == '\0' ? strdup("ui") : line[0];
-        process_commands(line[0], env, sh, false);
-        line[0] -= is_str_equal(line[0], "ui") ? 0 : tmp;
-        free(line[0]);free(line);
-        return 1;
-    }
     for (int i = 0; i <= sh->len_separator; ++i) {
         tmp = if_statement(line[i], env, sh);
         if (((i == 0 || sh->separator_type[i - 1] == 0 ||

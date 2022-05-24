@@ -47,43 +47,24 @@ void my_put_str_er(char *str)
     write(2, str, str_len(str));
 }
 
-static void other_signal_check(int rd)
+void error_acess(char *pars)
 {
-    if (WIFSTOPPED(rd)) {
-        if (WSTOPSIG(rd) == SIGSEGV)
-            my_put_str_er("Segmentation fault");
-        if (WSTOPSIG(rd) == SIGFPE)
-            my_put_str_er("Floating exception");
-        if (WSTOPSIG(rd) == SIGILL)
-            my_put_str_er("Illegal instruction");
-        if (WSTOPSIG(rd) == SIGABRT)
-            my_put_str_er("Abort");
-        if (WSTOPSIG(rd) == SIGTRAP)
-            my_put_str_er("Trace/breakpoint trap");
-        if (WSTOPSIG(rd) == SIGBUS)
-            my_put_str_er("Bus error");
-        write(2, "\n", 1);
-    }
+    my_put_str_er(pars);
+    my_put_str_er(": Command not found.\n");
 }
 
-void verify_return(int rd)
+char **command_with_color(char **pars, shell_t *sh)
 {
-    if (WIFSIGNALED(rd)) {
-        if (WTERMSIG(rd) == SIGSEGV)
-            my_put_str_er("Segmentation fault");
-        if (WTERMSIG(rd) == SIGFPE)
-            my_put_str_er("Floating exception");
-        if (WTERMSIG(rd) == SIGILL)
-            my_put_str_er("Illegal instruction");
-        if (WTERMSIG(rd) == SIGABRT)
-            my_put_str_er("Abort");
-        if (WTERMSIG(rd) == SIGTRAP)
-            my_put_str_er("Trace/breakpoint trap");
-        if (WTERMSIG(rd) == SIGBUS)
-            my_put_str_er("Bus error");
-        if (WCOREDUMP(rd))
-            my_put_str_er(" (core dumped)");
-        write(2, "\n", 1);
-    }
-    other_signal_check(rd);
+    char *commands[] = {"ls", "grep", NULL};
+    int j = 0;
+    if (!sh->all_mode) return pars;
+    for (; pars[j] != NULL; ++j);
+    for (int i = 0; commands[i] != NULL; ++i)
+        if (is_str_equal(pars[0], commands[i])) {
+            pars = realloc(pars, sizeof(char *) * (j + 2));
+            pars[j] = "--color=auto";
+            pars[j + 1] = NULL;
+            return pars;
+        }
+    return pars;
 }

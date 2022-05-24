@@ -45,7 +45,8 @@ static void modify_sh_sep(shell_t *sh, char *command, int i)
 {
     sh->separator_type[sh->len_separator] = which_separator(command, i);
     sh->len_separator++;
-    sh->separator_type = realloc(sh->separator_type, (sizeof(int) * (sh->len_separator + 2)));
+    sh->separator_type = realloc(
+    sh->separator_type, (sizeof(int) * (sh->len_separator + 2)));
 }
 
 char **semicolon(char *command, shell_t *sh, int i, int cp)

@@ -76,11 +76,14 @@ char *read_last_line(char *line)
 
 void write_to_rc(char *command, shell_t *sh)
 {
-    char *name_f = str_concat(str_concat(sh->cd_params->user, "/"), "myshrc_h");
+    char *init_name = str_concat(sh->cd_params->user, "/");
+    char *name_f = str_concat(init_name, "myshrc_h");
     int file = open(name_f, O_APPEND | O_WRONLY | O_CREAT, 0664);
     if (file != -1) {
         write(file, command, str_len(command));
         write(file, "\n", 1);
         close(file);
     }
+    free(name_f);
+    free(init_name);
 }

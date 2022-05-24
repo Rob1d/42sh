@@ -24,6 +24,12 @@
     (c >= 'a' && c <= 'z') && c != '_')
     #include <termios.h>
 
+typedef struct echo_r_s {
+    char *line;
+    char start;
+    int i;
+}echo_r_t;
+
 typedef struct if_params_s {
     char *params[2];
     char *equality_type;
@@ -74,6 +80,8 @@ typedef struct {
     shell_t *sh;
 }pipe_t;
 
+int len_spaces_alias(char *str, int i);
+char **command_with_color(char **pars, shell_t *sh);
 char *check_bactricks(char *command, char **env, shell_t *sh);
 char *str_concat(char *first, char *sec);
 bool set_alias(char **value, shell_t *sh, char *line);

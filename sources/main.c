@@ -19,7 +19,7 @@ void sigint(int sig)
         exit(0);
 }
 
-void flag_h(int av, char **argc)
+static void flag_h(int av, char **argc)
 {
     if (av == 2 && is_str_equal(argc[1], "-h")) {
         printf("42sh is a little linux shell\n-h for the help and quit\n"

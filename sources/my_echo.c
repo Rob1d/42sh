@@ -7,19 +7,6 @@
 
 #include "../includes/minishell.h"
 
-bool str_star_with(char *str, char *str_start)
-{
-    int i = 0;
-    if (str_len(str) < str_len(str_start))
-        return false;
-    for (; str_start[i] != '\0'; ++i)
-        if (str[i] != str_start[i])
-            return false;
-    if (str[i] != '=')
-        return false;
-    return true;
-}
-
 static void print_without_var(char *var)
 {
     int i = 0;
@@ -54,7 +41,7 @@ static int check_var(char **env, char *line, shell_t *sh, int i)
     char *name_var = malloc(sizeof(char) * str_len(line) + 1);
     ++i;
     int j = 0;
-    for (; line[i] != ' ' && line[i] != '\0'; ++i, ++j)
+    for (; line[i] != ' ' && line[i] != '\0' && line[i] != '"'; ++i, ++j)
         name_var[j] = line[i];
     name_var[j] = '\0';
     if (name_var[0] == '?')
@@ -69,33 +56,36 @@ static int check_var(char **env, char *line, shell_t *sh, int i)
     exit(1);
 }
 
+static void echo_red(char **env, shell_t *sh, echo_r_t *ert)
+{
+    for (; ert->line[ert->i] != ert->start && ert->line[ert->i] != '\0'; ++ert->i) {
+        if (ert->line[ert->i] == '$')
+            ert->i = write_var(env, ert->line, sh, ert->i);
+        else
+            printf("%c", ert->line[ert->i]);
+        if (ert->line[ert->i] == '\0') break;
+    }
+    printf("\n");exit(0);
+}
+
 bool my_echo(char **env, char *line, char **pars, shell_t *sh)
 {
     int i = 0;
     char start = 0;
     int pid = 0;
     int rd = 0;
-    if (!is_str_equal("echo", pars[0]))
-        return 0;
+    if (!is_str_equal("echo", pars[0])) return 0;
     pid = fork();
     if (pid == 0) {
         for (; *line != ' ' && *line != '\0'; ++line);
         for (; (line[i] == ' ' || line[i] == 9) && line[i] != '\0'; ++i);
         start = line[i] == '\'' || line[i] == '"' ? line[i] : '\0';
         line[i] == '\'' || line[i] == '"' ? ++i : 0;
-        for (int x = i; line[x] != start && line[x] != '\0'; ++x) {
-            if (line[x] == '$')
-                x = check_var(env, line, sh, x);
-        }
-        for (; line[i] != start && line[i] != '\0'; ++i) {
-            if (line[i] == '$')
-                i = write_var(env, line, sh, i);
-            else
-                printf("%c", line[i]);
-            if (line[i] == '\0') break;
-        }
-        printf("\n");exit(0);
+        for (int x = i; line[x] != start && line[x] != '\0'; ++x)
+            x = (line[x] == '$') ? check_var(env, line, sh, x) : x;
+        echo_red(env, sh, &(echo_r_t){line, start, i});
     }
-    waitpid(pid, &rd, 0);sh->last_return = WIFEXITED(rd) ? WEXITSTATUS(rd) : 1;
+    waitpid(pid, &rd, 0);
+    sh->last_return = WIFEXITED(rd) ? WEXITSTATUS(rd) : 1;
     return 1;
 }
