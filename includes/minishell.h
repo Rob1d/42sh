@@ -30,10 +30,13 @@ typedef struct echo_r_s {
     int i;
 }echo_r_t;
 
+
 typedef struct if_params_s {
     char *params[2];
     char *equality_type;
     bool res;
+    bool is_int;
+    int params_int[2];
 }if_params_t;
 
 typedef struct backticks_s {
