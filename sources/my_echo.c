@@ -58,7 +58,8 @@ static int check_var(char **env, char *line, shell_t *sh, int i)
 
 static void echo_red(char **env, shell_t *sh, echo_r_t *ert)
 {
-    for (; ert->line[ert->i] != ert->start && ert->line[ert->i] != '\0'; ++ert->i) {
+    for (; ert->line[ert->i] != ert->start
+    && ert->line[ert->i] != '\0'; ++ert->i) {
         if (ert->line[ert->i] == '$')
             ert->i = write_var(env, ert->line, sh, ert->i);
         else

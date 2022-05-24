@@ -7,59 +7,6 @@
 
 #include "../../includes/minishell.h"
 
-void history_up(history_t *hs,char **password, shell_t *sh, sp_get_t *sgt)
-{
-    if (sgt->c == 'A' && hs->actual_history < hs->len - 1) {
-        for (int w = 0; w < sgt->i; ++w)
-            write(1, "\b \b", 3);
-        write(1, "\r", 1);
-        special_output(sh);
-        sgt->i = 0;
-        ++hs->actual_history;
-        printf("%s", hs->history[hs->actual_history]);
-        sgt->i = strlen(hs->history[hs->actual_history]);
-        *password = strdup(hs->history[hs->actual_history]);
-        *password = realloc(*password, 128);
-    }
-}
-
-void history_down(history_t *hs,char **password, shell_t *sh, sp_get_t *sgt)
-{
-    if (sgt->c == 'B' && hs->actual_history > 0) {
-        for (int w = 0; w < sgt->i; ++w)
-            write(1, "\b \b", 3);
-        write(1, "\r", 1);
-        special_output(sh);
-        sgt->i = 0;
-        --hs->actual_history;
-        printf("%s", hs->history[hs->actual_history]);
-        sgt->i = strlen(hs->history[hs->actual_history]);
-        *password = strdup(hs->history[hs->actual_history]);
-        *password = realloc(*password, 128);
-    }
-}
-
-static int check_arrows(history_t *hs,char **password, shell_t *sh, sp_get_t *sgt)
-{
-    int tmp_i = sgt->i;
-    if (sgt->c == 27) {
-        sgt->c = getchar();
-        sgt->c = getchar();
-        for (int w = 0; w < 4; ++w)
-            write(1, "\b \b", 3);
-        history_up(hs, password, sh, sgt);
-        history_down(hs, password, sh, sgt);
-        if (sgt->c == 'D' && sgt->i > 0) {
-            write(1, "\b\b", 2);
-            write(1, &password[tmp_i], 1);
-        }
-        if (sgt->c == 'C')
-            write(1, &password[tmp_i - 1], 1);
-        return 1;
-    }
-    return 0;
-}
-
 static history_t *init_history(char **history)
 {
     int i = 0;
@@ -112,7 +59,7 @@ static char *real_get(char **history, shell_t *sh)
     int size_malloc = 128;
     history_t *hs = init_history(history);
     char *password = malloc(sizeof(char) * size_malloc);
-    while((sgt.c = getchar()) != '\n') {
+    while ((sgt.c = getchar()) != '\n') {
         password = get_complete(password, sh, &sgt);
         sgt.check = check_arrows(hs, &password, sh, &sgt);
         super_getline_red(password , sh, &sgt);

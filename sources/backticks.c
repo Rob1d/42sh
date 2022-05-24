@@ -36,7 +36,8 @@ static int change_backtricks(backticks_t *bck, char **env, shell_t *sh)
     int pid = 0;
     int rd = 0;
     bck->command[bck->i++] = ' ';tmp_command += bck->i;
-    for (; bck->command[bck->i] != '`' && bck->command[bck->i] != '\0'; ++bck->i)
+    for (; bck->command[bck->i] != '`' &&
+    bck->command[bck->i] != '\0'; ++bck->i)
         bck->command[bck->i] = ' ';
     bck->command[bck->i] = '\0';
     for (; tmp_command[j] != '`' && tmp_command[j] != '\0'; ++j);

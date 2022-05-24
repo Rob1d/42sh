@@ -31,6 +31,7 @@ SRC	=	sources/main.c	\
 		sources/super_getline/get_history.c	\
 		sources/super_getline/output_line.c		\
 		sources/super_getline/completion.c	\
+		sources/super_getline/super_getline_tools.c	\
 		sources/backticks.c	\
 		sources/check_the_if.c	\
 		sources/verify_signal.c	\
@@ -63,6 +64,7 @@ SRC_T =	sources/commands.c	\
 		sources/super_getline/get_history.c	\
 		sources/super_getline/output_line.c		\
 		sources/super_getline/completion.c	\
+		sources/super_getline/super_getline_tools.c	\
 		sources/backticks.c	\
 		sources/check_the_if.c	\
 		sources/verify_signal.c	\

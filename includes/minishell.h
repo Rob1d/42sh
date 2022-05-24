@@ -141,6 +141,8 @@ char *autocompeltion(char *inital_line);
 char *super_getline(char **history, shell_t *sh);
 void free_array(char **array);
 void special_output(shell_t *sh);
+int check_arrows(history_t *hs,
+char **password, shell_t *sh, sp_get_t *sgt);
 
 //check_if
 int if_statement(char *command, char **env, shell_t *sh);

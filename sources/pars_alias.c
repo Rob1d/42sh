@@ -35,13 +35,12 @@ bool set_alias(char **value, shell_t *sh, char *line)
     for (; *name_alias != ' ' && *name_alias != '\0'; ++name_alias, ++i);
     ++i;
     ++name_alias;
-    for(; name_alias[y] != ' ' && name_alias[y] != '\0'; ++i, ++y);
+    for (; name_alias[y] != ' ' && name_alias[y] != '\0'; ++i, ++y);
     name_alias[y] = '\0';
     ++i;
     set_alias_red(line, i, sh, name_alias);
     return true;
 }
-
 
 int count_words_alias(char *str)
 {

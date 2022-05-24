@@ -24,13 +24,6 @@ void my_db_rev(char **db)
     }
 }
 
-void free_array(char **array)
-{
-    for (int i = 0; array[i] != NULL; i++)
-        free(array[i]);
-    free(array);
-}
-
 static char *received_line(FILE *fp)
 {
     char *tmp = NULL;
