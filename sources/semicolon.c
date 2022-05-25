@@ -60,7 +60,8 @@ char **semicolon(char *command, shell_t *sh, int i, int cp)
             modify_sh_sep(sh, command, i);
             sh->separator_type != 0 ? ++i : 0;
             re = realloc(re, (sizeof(char *) * (sh->len_separator + 2)));
-            re[sh->len_separator] = malloc(sizeof(char) * str_len(command) + 2);
+            re[sh->len_separator] =
+            malloc(sizeof(char) * str_len(command) + 2);
             cp = 0;
         } else if (command[i] != ';'){
             re[sh->len_separator][cp] = command[i];
@@ -68,7 +69,6 @@ char **semicolon(char *command, shell_t *sh, int i, int cp)
         } else
             --i;
     }
-    re[sh->len_separator][cp] = '\0';
-    re[sh->len_separator + 1] = NULL;
+    re[sh->len_separator][cp] = '\0';re[sh->len_separator + 1] = NULL;
     return re;
 }

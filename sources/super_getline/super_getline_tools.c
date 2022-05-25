@@ -7,7 +7,8 @@
 
 #include "../../includes/minishell.h"
 
-static void history_up(history_t *hs, char **password, shell_t *sh, sp_get_t *sgt)
+static void history_up(history_t *hs,
+char **password, shell_t *sh, sp_get_t *sgt)
 {
     if (sgt->c == 'A' && hs->actual_history < hs->len - 1) {
         for (int w = 0; w < sgt->i; ++w)
@@ -23,7 +24,8 @@ static void history_up(history_t *hs, char **password, shell_t *sh, sp_get_t *sg
     }
 }
 
-static void history_down(history_t *hs, char **password, shell_t *sh, sp_get_t *sgt)
+static void history_down(history_t *hs,
+char **password, shell_t *sh, sp_get_t *sgt)
 {
     if (sgt->c == 'B' && hs->actual_history > 0) {
         for (int w = 0; w < sgt->i; ++w)

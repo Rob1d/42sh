@@ -16,9 +16,9 @@ void my_db_rev(char **db)
         ++i;
     --i;
     while (i > j){
-        temp = strdup(db[j]);
-        db[j] = strdup(db[i]);
-        db[i] = strdup(temp);
+        temp = db[j];
+        db[j] = db[i];
+        db[i] = temp;
         --i;
         ++j;
     }
@@ -56,12 +56,25 @@ static char *without_comments(FILE *fp)
     return tmp;
 }
 
+char **my_db_copy(char *db[])
+{
+    int i = 0;
+    char **ret;
+    for (;db[i] != NULL; ++i);
+    ret = malloc(sizeof(char *) * (i + 1));
+    for (int j = 0; db[j] != NULL; ++j)
+        ret[j] = db[j];
+    ret[i] = NULL;
+    return ret;
+}
+
 char **received_input(shell_t *sh)
 {
-    char **input = malloc(sizeof(char *) + 1);
-    char *name_f = str_concat(str_concat(sh->cd_params->user, "/"), "myshrc_h");
+    char *input[1024];
+    char *name_f = str_concat(str_concat
+    (sh->cd_params->user, "/"), "myshrc_h");
     FILE *fp = fopen(name_f, "r");
-    if (fp == NULL || input == NULL) return NULL;
+    if (fp == NULL) return NULL;
     int cp = 0;
     char *tmp = without_comments(fp);
     while (tmp != NULL) {
@@ -70,11 +83,9 @@ char **received_input(shell_t *sh)
         ++cp;
         free(tmp);
         tmp = without_comments(fp);
-        input = realloc(input, (sizeof(char * ) * (cp + 1)));
-        if (input == NULL) return NULL;
     }
     input[cp] = NULL;
     fclose(fp);
     my_db_rev(input);
-    return input;
+    return my_db_copy(input);
 }

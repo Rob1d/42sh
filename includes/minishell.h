@@ -30,7 +30,6 @@ typedef struct echo_r_s {
     int i;
 }echo_r_t;
 
-
 typedef struct if_params_s {
     char *params[2];
     char *equality_type;
@@ -125,7 +124,7 @@ int len_env(char **env);
 int my_cd(char **parsed, shell_t *sh, char **env);
 int is_str_equal(char *str, char *to_test);
 int launch_command(char **env, char **pars, shell_t *sh);
-int verify_command(char **env, shell_t *sh);
+void verify_command(char **env, shell_t *sh);
 char **parsing(char *str);
 int str_len(char *str);
 void my_putchar(char c);

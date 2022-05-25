@@ -67,13 +67,22 @@ int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
     return launch_command(env, pars, sh);
 }
 
-int verify_command(char **env, shell_t *sh)
+static void verify_command_red(char **line, shell_t *sh)
+{
+    free(line);
+    sh->len_separator = 0;
+    free(sh->separator_type);
+    sh->separator_type = malloc(sizeof(int));
+}
+
+void verify_command(char **env, shell_t *sh)
 {
     char **line = wait_commands(sh, env);
     int tmp = 0;
     bool last_return = true;
     for (int i = 0; i <= sh->len_separator; ++i) {
-        last_return = sh->separator_type[i - 1] == 2 && !last_return ? false : true;
+        last_return = sh->len_separator > 0 && (sh->separator_type[i - 1] == 2
+        && !last_return) ? false : true;
         tmp = if_statement(line[i], env, sh);
         if (((i == 0 || sh->separator_type[i - 1] == 0 ||
         (sh->separator_type[i - 1] == 1 && sh->last_return != 0) ||
@@ -82,12 +91,10 @@ int verify_command(char **env, shell_t *sh)
             line[i] = line[i][0] == '\0' ? strdup("ui") : line[i];
             process_commands(line[i], env, sh, false);
             line[i] -= is_str_equal(line[i], "ui") ? 0 : tmp;
-            last_return = true;
+            last_return = 1;
         } else
             last_return = false;
         free(line[i]);
     }
-    free(line);sh->len_separator = 0;free(sh->separator_type);
-    sh->separator_type = malloc(sizeof(int));
-    return 0;
+    verify_command_red(line, sh);
 }
