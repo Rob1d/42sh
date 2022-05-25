@@ -70,10 +70,10 @@ int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
 int verify_command(char **env, shell_t *sh)
 {
     char **line = wait_commands(sh, env);
-    int tmp = if_statement(line[0], env, sh);
+    int tmp = 0;
     bool last_return = true;
     for (int i = 0; i <= sh->len_separator; ++i) {
-        last_return = sh->separator_type[i - 1] == 2 ? false : true;
+        last_return = sh->separator_type[i - 1] == 2 && !last_return ? false : true;
         tmp = if_statement(line[i], env, sh);
         if (((i == 0 || sh->separator_type[i - 1] == 0 ||
         (sh->separator_type[i - 1] == 1 && sh->last_return != 0) ||
