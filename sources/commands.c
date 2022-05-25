@@ -71,16 +71,20 @@ int verify_command(char **env, shell_t *sh)
 {
     char **line = wait_commands(sh, env);
     int tmp = if_statement(line[0], env, sh);
+    bool last_return = true;
     for (int i = 0; i <= sh->len_separator; ++i) {
+        last_return = sh->separator_type[i - 1] == 2 ? false : true;
         tmp = if_statement(line[i], env, sh);
         if (((i == 0 || sh->separator_type[i - 1] == 0 ||
         (sh->separator_type[i - 1] == 1 && sh->last_return != 0) ||
-        (sh->separator_type[i - 1] == 2 && sh->last_return == 0)))) {
+        (sh->separator_type[i - 1] == 2 && sh->last_return == 0))) && last_return) {
             line[i] += tmp;
             line[i] = line[i][0] == '\0' ? strdup("ui") : line[i];
             process_commands(line[i], env, sh, false);
             line[i] -= is_str_equal(line[i], "ui") ? 0 : tmp;
-        }
+            last_return = true;
+        } else
+            last_return = false;
         free(line[i]);
     }
     free(line);sh->len_separator = 0;free(sh->separator_type);

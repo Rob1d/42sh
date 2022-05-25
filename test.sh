@@ -1,6 +1,6 @@
 #! /bin/bash
 
-RED='\033[0;31m'
+RED='\033[1;31m'
 NC='\033[0m'
 BLUE='\033[1;94m'
 GREEN='\033[1;92m'
@@ -47,9 +47,10 @@ if [[ $(echo "echo \"foo\" > check ; cat check ; rm check" | tcsh) != $(echo "ec
   echo "error at right redirections"
 fi
 
-if [[ $(echo "grep a < Makefile" | tcsh) != $(echo "grep a < Makefile" | ./42sh) ]]; then
+if [[ $(echo "cat < test.sh" | tcsh) != $(echo "cat < test.sh" | ./42sh) ]]; then
   echo "error at left redirections"
 fi
+
 printf "${GREEN}end test\n"
 printf "${NC}"
 make fclean -s;
