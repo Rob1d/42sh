@@ -76,6 +76,7 @@ bool my_echo(char **env, char *line, char **pars, shell_t *sh)
     int pid = 0;
     int rd = 0;
     if (!is_str_equal("echo", pars[0])) return 0;
+    (*line == ' ') ? ++line : 0;
     pid = fork();
     if (pid == 0) {
         for (; *line != ' ' && *line != '\0'; ++line);
