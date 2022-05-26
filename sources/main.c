@@ -37,6 +37,7 @@ void params_shell(int av, char **argc, shell_t *sh)
     sh->cd_params = cd_params;
     sh->last_return = 0;
     sh->len_separator = 0;
+    sh->lk_var = NULL;
     sh->separator_type = malloc(sizeof(int));
     path_to_home(sh->cd_params->user);
     sh->user_name = strdup(sh->cd_params->user);

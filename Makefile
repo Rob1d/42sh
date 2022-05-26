@@ -35,7 +35,8 @@ SRC	=	sources/main.c	\
 		sources/backticks.c	\
 		sources/check_the_if.c	\
 		sources/verify_signal.c	\
-		sources/str_tools.c
+		sources/str_tools.c	\
+		sources/variables.c
 
 
 
@@ -68,7 +69,8 @@ SRC_T =	sources/commands.c	\
 		sources/backticks.c	\
 		sources/check_the_if.c	\
 		sources/verify_signal.c	\
-		sources/str_tools.c
+		sources/str_tools.c	\
+		sources/variables.c
 
 
 

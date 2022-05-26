@@ -64,6 +64,12 @@ typedef struct {
     char **new_PWD;
 } cd;
 
+typedef struct var_s {
+    char *name;
+    char *value;
+    struct var_s *next;
+}var_t;
+
 typedef struct shell_s {
     int last_return;
     int *separator_type;
@@ -71,6 +77,7 @@ typedef struct shell_s {
     cd *cd_params;
     bool all_mode;
     char *user_name;
+    var_t *lk_var;
 }shell_t;
 
 typedef struct {
@@ -148,4 +155,7 @@ char **password, shell_t *sh, sp_get_t *sgt);
 
 //check_if
 int if_statement(char *command, char **env, shell_t *sh);
+
+//var_interpreter
+bool set_variable(char **pars, shell_t *sh);
 #endif
