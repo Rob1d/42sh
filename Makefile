@@ -36,7 +36,8 @@ SRC	=	sources/main.c	\
 		sources/check_the_if.c	\
 		sources/verify_signal.c	\
 		sources/str_tools.c	\
-		sources/variables.c
+		sources/variables.c	\
+		sources/display_alias.c
 
 
 
@@ -70,7 +71,9 @@ SRC_T =	sources/commands.c	\
 		sources/check_the_if.c	\
 		sources/verify_signal.c	\
 		sources/str_tools.c	\
-		sources/variables.c
+		sources/variables.c	\
+		sources/display_alias.c
+
 
 
 

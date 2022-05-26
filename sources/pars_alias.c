@@ -31,6 +31,10 @@ bool set_alias(char **value, shell_t *sh, char *line)
     char *value_alias;
     char *tmp_f;
     if (!is_str_equal(value[0], "alias")) return false;
+    if (value[1] == NULL) {
+        display_alias(sh);
+        return true;
+    }
     name_alias = strdup(line);
     for (; *name_alias != ' ' && *name_alias != '\0'; ++name_alias, ++i);
     ++i;

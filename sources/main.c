@@ -54,6 +54,7 @@ int main(int av, char **argc, char **env)
     shell_t *sh = malloc(sizeof(shell_t));
     params_shell(av, argc, sh);
     flag_h(av, argc);
+    add_first_var(sh, env);
     signal(SIGINT, sigint);
     pid = fork();
     if (pid == 0)

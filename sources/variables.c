@@ -24,6 +24,12 @@ static void add_variable(char *name, char *value, shell_t *sh)
     tmp->next->next = NULL;
 }
 
+void add_first_var(shell_t *sh, char **env)
+{
+    add_variable("user", sh->user_name, sh);
+    add_variable("cwd", sh->cd_params->old_cd, sh);
+}
+
 bool set_variable(char **pars, shell_t *sh)
 {
     char *value;
@@ -39,13 +45,11 @@ bool set_variable(char **pars, shell_t *sh)
         return true;
     }
     var_name = strdup(pars[1]);
-
     for (; var_name[i] != '\0' && var_name[i] != '='; ++i);
     if (var_name[i] == '\0' || (var_name[i] == '=' && var_name[i + 1] == '\0'))
         value = NULL;
     else
         value = strdup(pars[1]) + i + 1;
-    var_name[i] = '\0';
-    add_variable(var_name, value, sh);
+    var_name[i] = '\0';add_variable(var_name, value, sh);
     return true;
 }

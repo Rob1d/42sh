@@ -89,6 +89,8 @@ typedef struct {
     shell_t *sh;
 }pipe_t;
 
+void display_alias(shell_t *sh);
+char *extract_command_alias(char **alias, int i);
 int len_spaces_alias(char *str, int i);
 char **command_with_color(char **pars, shell_t *sh);
 char *check_bactricks(char *command, char **env, shell_t *sh);
@@ -158,4 +160,5 @@ int if_statement(char *command, char **env, shell_t *sh);
 
 //var_interpreter
 bool set_variable(char **pars, shell_t *sh);
+void add_first_var(shell_t *sh, char **env);
 #endif

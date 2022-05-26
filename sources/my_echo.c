@@ -20,7 +20,6 @@ static int write_var(char **env, char *line, shell_t *sh, int i)
 {
     char *name_var = malloc(sizeof(char) * str_len(line) + 1);
     int j = 0;
-    ++i;
     for (; line[i] != ' ' && line[i] != '\0'; ++i, ++j)
         name_var[j] = line[i];
     name_var[j] = '\0';
@@ -70,7 +69,7 @@ static void echo_red(char **env, shell_t *sh, echo_r_t *ert)
     for (; ert->line[ert->i] != ert->start
     && ert->line[ert->i] != '\0'; ++ert->i) {
         if (ert->line[ert->i] == '$')
-            ert->i = write_var(env, ert->line, sh, ert->i);
+            ert->i = write_var(env, ert->line, sh, ert->i + 1);
         else
             printf("%c", ert->line[ert->i]);
         if (ert->line[ert->i] == '\0') break;
