@@ -19,23 +19,24 @@ static void print_without_var(char *var)
 static int write_var(char **env, char *line, shell_t *sh, int i)
 {
     char *name_var = malloc(sizeof(char) * str_len(line) + 1);
-    ++i;
     int j = 0;
+    ++i;
     for (; line[i] != ' ' && line[i] != '\0'; ++i, ++j)
         name_var[j] = line[i];
     name_var[j] = '\0';
     if (name_var[0] == '?') {
-        printf("%d", sh->last_return);
-        return i;
+        printf("%d", sh->last_return);return i;
     }
     if (name_var[0] == '0') {
-        printf("42sh");
-        return i;
+        printf("42sh");return i;
     }
     for (int w = 0; env[w] != NULL; ++w)
         if (str_star_with(env[w], name_var)) {
-            print_without_var(env[w]);
-            return i - 1;
+            print_without_var(env[w]);return i - 1;
+        }
+    for (var_t *tmp = sh->lk_var; tmp != NULL; tmp = tmp->next)
+        if (is_str_equal(name_var, tmp->name)) {
+            printf("%s", tmp->value);return i - 1;
         }
     return 0;
 }
@@ -55,9 +56,13 @@ static int check_var(char **env, char *line, shell_t *sh, int i)
             free(name_var);
             return i - 1;
         }
+    for (var_t *tmp = sh->lk_var; tmp != NULL; tmp = tmp->next)
+        if (is_str_equal(name_var, tmp->name)) {
+            free(name_var);
+            return i - 1;
+        }
     fprintf(stderr, "%s: Undefined variable.\n", name_var);
-    free(name_var);
-    exit(1);
+    free(name_var);exit(1);
 }
 
 static void echo_red(char **env, shell_t *sh, echo_r_t *ert)
