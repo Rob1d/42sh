@@ -63,10 +63,10 @@ char **semicolon(char *command, shell_t *sh, int i, int cp)
             re[sh->len_separator] =
             malloc(sizeof(char) * str_len(command) + 2);
             cp = 0;
-        } else if (command[i] != ';'){
+        } else if (command[i] != ';') {
             re[sh->len_separator][cp] = command[i];
             ++cp;
-        } else
+        } else if (command[i] == '\0')
             --i;
     }
     re[sh->len_separator][cp] = '\0';re[sh->len_separator + 1] = NULL;
