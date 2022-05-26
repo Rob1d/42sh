@@ -91,6 +91,7 @@ void check_len_command(char **line, shell_t *sh)
     if (sh->len_separator >= cp) {
         sh->len_separator = -1;
         fprintf(stderr, "Invalid null command.\n");
+        sh->last_return = 1;
     }
 }
 

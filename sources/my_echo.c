@@ -28,6 +28,10 @@ static int write_var(char **env, char *line, shell_t *sh, int i)
         printf("%d", sh->last_return);
         return i;
     }
+    if (name_var[0] == '0') {
+        printf("42sh");
+        return i;
+    }
     for (int w = 0; env[w] != NULL; ++w)
         if (str_star_with(env[w], name_var)) {
             print_without_var(env[w]);
@@ -44,7 +48,7 @@ static int check_var(char **env, char *line, shell_t *sh, int i)
     for (; line[i] != ' ' && line[i] != '\0' && line[i] != '"'; ++i, ++j)
         name_var[j] = line[i];
     name_var[j] = '\0';
-    if (name_var[0] == '?')
+    if (name_var[0] == '?' || name_var[0] == '0')
         return i;
     for (int w = 0; env[w] != NULL; ++w)
         if (str_star_with(env[w], name_var)) {
