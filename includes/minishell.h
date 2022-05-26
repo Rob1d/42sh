@@ -89,6 +89,7 @@ typedef struct {
     shell_t *sh;
 }pipe_t;
 
+bool str_star_with_spe(char *str, char *str_start);
 void display_alias(shell_t *sh);
 char *extract_command_alias(char **alias, int i);
 int len_spaces_alias(char *str, int i);

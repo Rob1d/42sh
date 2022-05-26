@@ -26,10 +26,7 @@ bool set_alias(char **value, shell_t *sh, char *line)
     FILE *fp;
     int i = 0;
     int y = 0;
-    char *name_f;
     char *name_alias;
-    char *value_alias;
-    char *tmp_f;
     if (!is_str_equal(value[0], "alias")) return false;
     if (value[1] == NULL) {
         display_alias(sh);

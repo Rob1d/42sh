@@ -27,6 +27,7 @@ char *extract_command_alias(char **alias, int i)
     int j = 1;
     int w = 0;
     char *nw_command = malloc(sizeof(char) * str_len(alias[i]));
+    char *ret;
     for (; alias[i][j - 1] != 34; ++j);
     for (; alias[i][w + j] != 34; ++w)
         nw_command[w] = alias[i][w + j];
@@ -41,6 +42,9 @@ char *as_alias(char *command, shell_t *sh)
     struct stat rc_stat;
     char *buf;
     char **alias;
+    char *ret;
+    char **full_command = parsing(command);
+    char *nw_command;
     if (stat(name_f, &rc_stat) == -1)
         return command;
     buf = malloc(sizeof(char) * rc_stat.st_size + 1);
@@ -48,9 +52,15 @@ char *as_alias(char *command, shell_t *sh)
     buf[rc_stat.st_size] = '\0';
     close(file);
     alias = parsing_alias(buf);
-    for (int i = 0; alias[i] != NULL; ++i)
-        if (check_command_alias(alias, i, command))
-            return extract_command_alias(alias, i);
+    for (int i = 0; alias[i] != NULL; ++i) {
+        if (check_command_alias(alias, i, full_command[0])) {
+            nw_command =  extract_command_alias(alias, i);
+            for (; *command != '\0' && *command != ' '; ++command);
+            ret = str_concat(nw_command, command);
+            free(nw_command);
+            return ret;
+        }
+    }
     return command;
 }
 
