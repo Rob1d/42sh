@@ -39,7 +39,8 @@ char *get_concat(char **pars)
     res[0] = '\0';
     for (int i = 0; pars[i] != NULL; ++i) {
         strcat(res, pars[i]);
-        strcat(res, " ");
+        if (pars[i] != NULL && pars[i + 1] != NULL)
+            strcat(res, " ");
     }
     return res;
 }
@@ -56,7 +57,7 @@ char *as_var(char *command, shell_t *sh, char **env)
         }
         if (changed && tmp_var == NULL) {
             fprintf(stderr, "%s: Undefined variable.\n", pars[i] + 1);
-            return NULL;
+            sh->last_return = 1;return NULL;
         }
         if (changed) {
             pars[i] = tmp_var;

@@ -19,7 +19,7 @@ if [[ $(echo "not here" | tcsh) != $(echo "not here" | ./42sh) ]]; then
   echo "error at no command"
 fi
 
-if [[ $(echo "setenv lol ratio ; echo \$lol" | tcsh) != $(echo "setenv lol ratio ; echo \$lol" | ./42sh) ]]; then
+if [[ $(echo "setenv lol ratio; echo \$lol" | tcsh) != $(echo "setenv lol ratio; echo \$lol" | ./42sh) ]]; then
   echo "error at env"
 fi
 ##tmp
@@ -45,10 +45,6 @@ fi
 
 if [[ $(echo "echo \"foo\" > check ; cat check ; rm check" | tcsh) != $(echo "echo \"foo\" > check ; cat check ; rm check" | ./42sh) ]]; then
   echo "error at right redirections"
-fi
-
-if [[ $(echo "cat < test.sh" | tcsh) != $(echo "cat < test.sh" | ./42sh) ]]; then
-  echo "error at left redirections"
 fi
 
 printf "${GREEN}end test\n"
