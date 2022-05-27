@@ -89,6 +89,7 @@ typedef struct {
     shell_t *sh;
 }pipe_t;
 
+bool str_start_with(char *str, char *start);
 bool str_star_with_spe(char *str, char *str_start);
 void display_alias(shell_t *sh);
 char *extract_command_alias(char **alias, int i);
@@ -166,4 +167,7 @@ void add_first_var(shell_t *sh, char **env);
 //display_history
 bool display_history(char *command, shell_t *sh);
 char **my_db_copy(char *db[]);
+
+//as_var
+char *as_var(char *command, shell_t *sh, char **env);
 #endif

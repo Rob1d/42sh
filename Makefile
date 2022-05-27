@@ -38,7 +38,8 @@ SRC	=	sources/main.c	\
 		sources/str_tools.c	\
 		sources/variables.c	\
 		sources/display_alias.c	\
-		sources/display_history.c
+		sources/display_history.c	\
+		sources/as_var.c
 
 
 
@@ -75,11 +76,8 @@ SRC_T =	sources/commands.c	\
 		sources/str_tools.c	\
 		sources/variables.c	\
 		sources/display_alias.c	\
-		sources/display_history.c
-
-
-
-
+		sources/display_history.c	\
+		sources/as_var.c
 
 
 LIB =  -O2 -Wall

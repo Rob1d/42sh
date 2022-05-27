@@ -7,7 +7,7 @@
 
 #include "../../includes/minishell.h"
 
-static bool str_start_with(char *str, char *start)
+bool str_start_with(char *str, char *start)
 {
     if (str_len(str) < strlen(start))
         return false;

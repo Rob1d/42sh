@@ -50,6 +50,7 @@ int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
 {
     char **pars;
     line = as_alias(line, sh);
+    line = as_var(line, sh, env);
     if (is_str_equal(line, "ui")) return 1;
     if (right_redirection(line, env, sh)) return 1;
     if (pipe_gestion(line, env, sh)) return 1;
