@@ -22,6 +22,7 @@ void params_shell(int av, char **argc, shell_t *sh)
     ++sh->user_name;
     for (; *sh->user_name != '/'; ++sh->user_name);
     ++sh->user_name;
+    add_first_var(sh);
 }
 
 static void other_signal_check(int rd)

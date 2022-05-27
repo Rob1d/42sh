@@ -31,10 +31,11 @@ static void add_variable(char *name, char *value, shell_t *sh)
     tmp->next->next = NULL;
 }
 
-void add_first_var(shell_t *sh, char **env)
+void add_first_var(shell_t *sh)
 {
     add_variable("user", sh->user_name, sh);
     add_variable("cwd", sh->cd_params->old_cd, sh);
+    add_variable("one", "one", sh);
 }
 
 bool set_variable(char **pars, shell_t *sh)

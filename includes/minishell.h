@@ -164,7 +164,7 @@ int if_statement(char *command, char **env, shell_t *sh);
 
 //var_interpreter
 bool set_variable(char **pars, shell_t *sh);
-void add_first_var(shell_t *sh, char **env);
+void add_first_var(shell_t *sh);
 
 //display_history
 bool display_history(char *command, shell_t *sh);

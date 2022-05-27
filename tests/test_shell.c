@@ -263,3 +263,74 @@ params_shell(0, NULL, sh);
     process_commands(check, good, sh, false);
     cr_assert_stdout_eq_str("8$\n", "");
 }
+
+Test(echo, test, .init=cr_redirect_stdout)
+{
+char **good = copy_double_tab(environ);
+char *command = strdup("echo lol");
+cd *cd_params = malloc(sizeof(cd) + 1);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
+params_cd(cd_params);
+process_commands(command, good, sh, false);
+cr_assert_stdout_eq_str("lol", "");
+}
+
+Test(echo_ez, test, .init=cr_redirect_stdout)
+{
+char **good = copy_double_tab(environ);
+char *command = strdup("echo lol");
+cd *cd_params = malloc(sizeof(cd) + 1);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
+params_cd(cd_params);
+process_commands(command, good, sh, false);
+cr_assert_stdout_eq_str("lol", "");
+}
+
+Test(echo_var, test, .init=cr_redirect_stdout)
+{
+char **good = copy_double_tab(environ);
+char *command = strdup("echo $one");
+cd *cd_params = malloc(sizeof(cd) + 1);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
+params_cd(cd_params);
+process_commands(command, good, sh, false);
+cr_assert_stdout_eq_str("$one", "");
+}
+
+Test(set_an_alias, test, .init=cr_redirect_stdout)
+{
+char **good = copy_double_tab(environ);
+char *command = strdup("alias lol ls -la");
+cd *cd_params = malloc(sizeof(cd) + 1);
+shell_t *sh = malloc(sizeof(shell_t));
+int ret = 0;
+params_shell(0, NULL, sh);
+params_cd(cd_params);
+ret = process_commands(command, good, sh, false);
+cr_assert_eq(ret, 1);
+}
+
+Test(use_an_alias, test, .init=cr_redirect_stdout)
+{
+char **good = copy_double_tab(environ);
+char *command = strdup("lol");
+shell_t *sh = malloc(sizeof(shell_t));
+int ret = 0;
+params_shell(0, NULL, sh);
+ret = process_commands(command, good, sh, false);
+cr_assert_eq(ret, 0);
+}
+
+Test(display_history, test, .init=cr_redirect_stdout)
+{
+char **good = copy_double_tab(environ);
+char *command = strdup("history");
+shell_t *sh = malloc(sizeof(shell_t));
+int ret = 0;
+params_shell(0, NULL, sh);
+ret = process_commands(command, good, sh, false);
+cr_assert_eq(ret, 1);
+}
