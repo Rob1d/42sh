@@ -148,7 +148,7 @@ char **semicolon(char *command, shell_t *sh, int i, int cp);
 bool my_echo(char **env, char *line, char **pars, shell_t *sh);
 bool str_star_with(char *str, char *str_start);
 //super_getline
-char **received_input(shell_t *sh);
+char **received_input(shell_t *sh, bool reverse);
 char *autocompeltion(char *inital_line);
 char *super_getline(char **history, shell_t *sh);
 void free_array(char **array);
@@ -162,4 +162,8 @@ int if_statement(char *command, char **env, shell_t *sh);
 //var_interpreter
 bool set_variable(char **pars, shell_t *sh);
 void add_first_var(shell_t *sh, char **env);
+
+//display_history
+bool display_history(char *command, shell_t *sh);
+char **my_db_copy(char *db[]);
 #endif

@@ -7,7 +7,7 @@
 
 #include "../../includes/minishell.h"
 
-void my_db_rev(char **db)
+static void my_db_rev(char **db)
 {
     int i = 0;
     int j = 0;
@@ -56,28 +56,16 @@ static char *without_comments(FILE *fp)
     return tmp;
 }
 
-char **my_db_copy(char *db[])
+char **received_input(shell_t *sh, bool reverse)
 {
-    int i = 0;
-    char **ret;
-    for (;db[i] != NULL; ++i);
-    ret = malloc(sizeof(char *) * (i + 1));
-    for (int j = 0; db[j] != NULL; ++j)
-        ret[j] = db[j];
-    ret[i] = NULL;
-    return ret;
-}
-
-char **received_input(shell_t *sh)
-{
-    char *input[1024];
+    char *input[2048];
     char *name_f = str_concat(str_concat
     (sh->cd_params->user, "/"), "myshrc_h");
     FILE *fp = fopen(name_f, "r");
     if (fp == NULL) return NULL;
     int cp = 0;
     char *tmp = without_comments(fp);
-    while (tmp != NULL) {
+    while (tmp != NULL && cp <= 2047) {
         input[cp] = strdup(tmp);
         input[cp][strlen(input[cp]) - 1] = '\0';
         ++cp;
@@ -86,6 +74,6 @@ char **received_input(shell_t *sh)
     }
     input[cp] = NULL;
     fclose(fp);
-    my_db_rev(input);
+    reverse ? my_db_rev(input) : 0;
     return my_db_copy(input);
 }

@@ -39,18 +39,13 @@ char *as_alias(char *command, shell_t *sh)
 {
     char *name_f = str_concat(str_concat(sh->cd_params->user, "/"), "myshrc");
     int file = open(name_f, O_RDONLY);
-    struct stat rc_stat;
-    char *buf;
-    char **alias;
-    char *ret;
+    struct stat rc_stat;char *buf;char **alias;char *ret;char *nw_command;
     char **full_command = parsing(command);
-    char *nw_command;
     if (stat(name_f, &rc_stat) == -1)
         return command;
     buf = malloc(sizeof(char) * rc_stat.st_size + 1);
     read(file, buf, rc_stat.st_size);
-    buf[rc_stat.st_size] = '\0';
-    close(file);
+    buf[rc_stat.st_size] = '\0';close(file);
     alias = parsing_alias(buf);
     for (int i = 0; alias[i] != NULL; ++i) {
         if (check_command_alias(alias, i, full_command[0])) {
@@ -89,7 +84,7 @@ void write_to_rc(char *command, shell_t *sh)
     char *init_name = str_concat(sh->cd_params->user, "/");
     char *name_f = str_concat(init_name, "myshrc_h");
     int file = open(name_f, O_APPEND | O_WRONLY | O_CREAT, 0664);
-    if (file != -1) {
+    if (file != - 1) {
         write(file, command, str_len(command));
         write(file, "\n", 1);
         close(file);

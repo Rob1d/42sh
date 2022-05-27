@@ -12,7 +12,7 @@ char **wait_commands(shell_t *sh, char **env)
     char *buf = NULL;
     char **re;
     size_t line_size = 0;
-    char **history = received_input(sh);
+    char **history = received_input(sh, true);
     sh->all_mode ? special_output(sh) : 0;
     if (history != NULL && sh->all_mode) {
         buf = super_getline(history, sh);
