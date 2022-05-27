@@ -39,7 +39,8 @@ SRC	=	sources/main.c	\
 		sources/variables.c	\
 		sources/display_alias.c	\
 		sources/display_history.c	\
-		sources/as_var.c
+		sources/as_var.c	\
+		sources/verify_command.c
 
 
 
@@ -77,7 +78,9 @@ SRC_T =	sources/commands.c	\
 		sources/variables.c	\
 		sources/display_alias.c	\
 		sources/display_history.c	\
-		sources/as_var.c
+		sources/as_var.c	\
+		sources/verify_command.c
+
 
 
 LIB =  -O2 -Wall

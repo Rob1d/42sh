@@ -1,0 +1,3 @@
+guillemets echo
+echainement ;;;; + tests && ||
+(ls) -> echo 4
