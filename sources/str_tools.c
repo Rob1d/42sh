@@ -39,3 +39,14 @@ bool str_star_with(char *str, char *str_start)
         return false;
     return true;
 }
+
+void my_put_str_er(char *str)
+{
+    write(2, str, str_len(str));
+}
+
+void error_acess(char *pars)
+{
+    my_put_str_er(pars);
+    my_put_str_er(": Command not found.\n");
+}

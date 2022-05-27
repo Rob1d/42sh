@@ -37,17 +37,37 @@ char *get_concat(char **pars)
 {
     char *res = malloc(sizeof(char) * (get_total_len_double_tab(pars) * 2) + 1);
     res[0] = '\0';
-    for (int i = 0; pars[i] != NULL; ++i) {
+    for (int i = 0; pars[i] != NULL; ++i)
         strcat(res, pars[i]);
-        if (pars[i] != NULL && pars[i + 1] != NULL)
-            strcat(res, " ");
-    }
     return res;
+}
+
+char **pars_var(char *command)
+{
+    char **ret = malloc(sizeof(char *) * 2);
+    int cp = 0;
+    int cp_i = 0;
+    ret[0] = malloc(sizeof(char) * strlen(command) + 1);
+    for (int i = 0; command[i] != '\0'; ++i) {
+        if (command[i] == '$') {
+            ret[cp][cp_i] = '\0';
+            ++cp;
+            ret = realloc(ret, sizeof(char * ) * (cp + 2));
+            cp_i = 0;
+            ret[cp] = malloc(sizeof(char) * (strlen(command) + 1));
+        }
+        ret[cp][cp_i] = command[i];
+        ++cp_i;
+    }
+    ret[cp][cp_i] = '\0';
+    ++cp;
+    ret[cp] = NULL;
+    return ret;
 }
 
 char *as_var(char *command, shell_t *sh, char **env)
 {
-    char **pars = parsing(command);
+    char **pars = pars_var(command);
     char *tmp_var = NULL;
     bool changed = false;
     for (int i = 0; pars[i] != NULL; ++i) {

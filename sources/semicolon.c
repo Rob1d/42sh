@@ -68,10 +68,6 @@ char **semicolon(char *command, shell_t *sh, int i, int cp)
             re[sh->len_separator][cp] = command[i];
             ++cp;
         }
-            /*
-        } else if (command[i] == '\0')
-            --i;
-             */
     }
     re[sh->len_separator][cp] = '\0';re[sh->len_separator + 1] = NULL;
     return re;

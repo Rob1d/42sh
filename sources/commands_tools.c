@@ -7,6 +7,16 @@
 
 #include "../includes/minishell.h"
 
+static void remove_quote(char *command)
+{
+    for (int i = 0; command[i] != '\0'; i++) {
+        if ((command[i] == '"' || command[i] == '\'') && (i > 0 && command[i - 1] != '\\'))
+            command[i] = ' ';
+        if ((command[i] == '"' || command[i] == '\'') && (i > 0 && command[i - 1] == '\\'))
+            command[i - 1] = ' ';
+    }
+}
+
 char **wait_commands(shell_t *sh, char **env)
 {
     char *buf = NULL;
@@ -23,8 +33,8 @@ char **wait_commands(shell_t *sh, char **env)
             exit(0);
         buf[line_size - 1] = '\0';
     }
-    if (line_size == 1)
-        buf = "ui";
+    if (line_size == 1) buf = strdup("ui");
+    remove_quote(buf);
     write_to_rc(buf, sh);
     buf = check_bactricks(buf, env, sh);
     re = semicolon(buf, sh, 0, 0);
@@ -40,17 +50,6 @@ char *put_bin(char *command)
     for (int i = 0; command[i] != '\0'; ++i)
         full_command[i + 5] = command[i];
     return full_command;
-}
-
-void my_put_str_er(char *str)
-{
-    write(2, str, str_len(str));
-}
-
-void error_acess(char *pars)
-{
-    my_put_str_er(pars);
-    my_put_str_er(": Command not found.\n");
 }
 
 char **command_with_color(char **pars, shell_t *sh)

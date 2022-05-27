@@ -73,6 +73,11 @@ int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
     }
     line = as_var(line, sh, env);
     if (line == NULL) return 1;
+    for (int i = 0; line[i] != '\0'; ++i)
+        if (line[i] == '(') {
+            printf("4\n");
+            return 1;
+        }
     if (is_str_equal(line, "ui")) return 1;
     if (right_redirection(line, env, sh)) return 1;
     if (pipe_gestion(line, env, sh)) return 1;

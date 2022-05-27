@@ -89,8 +89,6 @@ bool my_echo(char **env, char *line, char **pars, shell_t *sh)
     if (pid == 0) {
         for (; *line != ' ' && *line != '\0'; ++line);
         for (; (line[i] == ' ' || line[i] == 9) && line[i] != '\0'; ++i);
-        start = line[i] == '\'' || line[i] == '"' ? line[i] : '\0';
-        line[i] == '\'' || line[i] == '"' ? ++i : 0;
         for (int x = i; line[x] != start && line[x] != '\0'; ++x)
             x = (line[x] == '$') ? check_var(env, line, sh, x) : x;
         echo_red(env, sh, &(echo_r_t){line, start, i});
