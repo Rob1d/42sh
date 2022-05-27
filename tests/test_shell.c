@@ -19,8 +19,8 @@ char **copy_double_tab(char **tab)
         copy[i] = strdup(tab[i]);
     copy[len] = NULL;
     copy[0] = "PATH=/home/Cote2porc/.nvm/versions/node/v16.14.2/bin:"
-              "/usr/local/bin:/usr/bin:/bin:/home/Cote2porc/bin:/usr"
-              "/local/sbin:/usr/sbin:/var/lib/snapd/snap/bin";
+    "/usr/local/bin:/usr/bin:/bin:/home/Cote2porc/bin:/usr"
+    "/local/sbin:/usr/sbin:/var/lib/snapd/snap/bin";
     return copy;
 }
 
@@ -38,41 +38,45 @@ Test(cd, not_error, .init=cr_redirect_stdout) {
     int verif;
 char **env = malloc(sizeof(char *) * 10);
     cd *cd_params = malloc(sizeof(cd) + 1);
-params_cd(cd_params);
+    params_cd(cd_params);
+    shell_t *sh = malloc(sizeof(shell_t));
+    params_shell(0, NULL, sh);
     test[0] = "cd";
     test[1] = "tests";
     test[2] = NULL;
-    verif = my_cd(test, cd_params, env);
+    verif = my_cd(test, sh, env);
     cr_assert_eq(0, verif);
 }
 
 Test(cd, not_error_2, .init=cr_redirect_stdout) {
     char **test = malloc(sizeof(char *) * 3);
     int verif;
-char **env = malloc(sizeof(char *) * 10);
+    char **env = malloc(sizeof(char *) * 10);
     cd *cd_params = malloc(sizeof(cd) + 1);
-params_cd(cd_params);
+    params_cd(cd_params);
+    shell_t *sh = malloc(sizeof(shell_t));
+    params_shell(0, NULL, sh);
     test[0] = "cd";
     test[1] = NULL;
     test[2] = NULL;
-    verif = my_cd(test, cd_params, env);
+    verif = my_cd(test, sh, env);
     cr_assert_eq(0, verif);
 }
 
 Test(cd, not_error_3, .init=cr_redirect_stdout) {
 char **test = malloc(sizeof(char *) * 3);
-int verif;
+int i;
 char **env = malloc(sizeof(char *) * 10);
 env[0] = NULL;
-cd *cd_params = malloc(sizeof(cd) + 1);
-params_cd(cd_params);
-path_to_home(cd_params->modif_env[2]);
-path_to_home(cd_params->new_PWD[2]);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
+path_to_home(sh->cd_params->modif_env[2]);
+path_to_home(sh->cd_params->new_PWD[2]);
 test[0] = "cd";
 test[1] = "-";
 test[2] = NULL;
-verif = my_cd(test, cd_params, env);
-cr_assert_eq(0, verif);
+i = my_cd(test, sh, env);
+cr_assert_eq(0, i);
 }
 
 Test(cd, str_equal, .init=cr_redirect_stdout) {
@@ -83,6 +87,8 @@ cr_assert_eq(0, verif);
 Test(env, set_env, .init=cr_redirect_stdout) {
     char **env = malloc(sizeof(char *) * 5);
     char **pars = malloc(sizeof(char *) * 5);
+    shell_t *sh = malloc(sizeof(shell_t));
+    params_shell(0, NULL, sh);
     int verif;
     env[0] = "VAR=value";
     env[1] = "THEO=pd";
@@ -92,13 +98,14 @@ Test(env, set_env, .init=cr_redirect_stdout) {
     pars[1] = "OSCAR";
     pars[2] = "GIGABG";
     pars[3] = NULL;
-    verif = set_env(env, pars);
+    verif = set_env(env, pars, sh);
     cr_assert_eq(0, verif);
 }
 
 Test(env, unset_env, .init=cr_redirect_stdout) {
 char **env = malloc(sizeof(char *) * 5);
 char **pars = malloc(sizeof(char *) * 5);
+
 int verif;
 env[0] = "VAR=value";
 env[1] = "THEO=pd";
@@ -128,30 +135,36 @@ cr_assert_eq(1, verif);
 
 Test(setenv, setenv_test, .init=cr_redirect_stdout) {
     char **test = malloc(sizeof(char *) * 5);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
     test[0] = "setenv";
     test[1] = "VAR#";
     test[2] = "Value";
     test[3] = NULL;
-cr_assert_eq(0, error_setenv(test));
+cr_assert_eq(0, error_setenv(test, sh));
 }
 
 Test(setenv, setenv_test2, .init=cr_redirect_stdout) {
 char **test = malloc(sizeof(char *) * 5);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
 test[0] = "setenv";
 test[1] = "#VAR";
 test[2] = "Value";
 test[3] = NULL;
-cr_assert_eq(0, error_setenv(test));
+cr_assert_eq(0, error_setenv(test, sh));
 }
 
 Test(setenv, setenv_test3, .init=cr_redirect_stdout) {
 char **test = malloc(sizeof(char *) * 10);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
 test[0] = "setenv";
 test[1] = "VAR";
 test[2] = "Value";
 test[3] = "SAU";
 test[4] = NULL;
-cr_assert_eq(0, error_setenv(test));
+cr_assert_eq(0, error_setenv(test, sh));
 }
 
 Test(setenv, setenv_test4, .init=cr_redirect_stdout) {
@@ -177,8 +190,10 @@ cr_assert_str_eq("/bin/ls", put_bin("ls"));
 }
 Test(commands_tools, semicolon, .init=cr_redirect_stdout){
     char **re = malloc(sizeof(char *) * 10);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
     char *ui = "ls ; cd";
-    semicolon(ui, re);
+    re = semicolon(ui, sh, 0, 0);
     cr_assert_str_neq("ls", re[0]);
 }
 
@@ -202,8 +217,10 @@ Test(left_redirection, test, .init=cr_redirect_stdout)
     char **good = copy_double_tab(environ);
     char *command = strdup("cat < tests/test");
     cd *cd_params = malloc(sizeof(cd) + 1);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
     params_cd(cd_params);
-    process_commands(command, good, cd_params, false);
+    process_commands(command, good, sh, false);
     cr_assert_stdout_eq_str("test", "");
 }
 
@@ -213,9 +230,11 @@ Test(right_redirection, test, .init=cr_redirect_stdout)
     char *command = strdup("echo ui > tests/tmp");
     char *check = strdup("cat tests/tmp");
     cd *cd_params = malloc(sizeof(cd) + 1);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
     params_cd(cd_params);
-    process_commands(command, good, cd_params, false);
-    process_commands(check, good, cd_params, false);
+    process_commands(command, good, sh, false);
+    process_commands(check, good, sh, false);
     cr_assert_stdout_eq_str("ui\n", "");
 }
 
@@ -224,8 +243,10 @@ Test(pipe, test, .init=cr_redirect_stdout)
     char **good = copy_double_tab(environ);
     char *command = strdup("cat tests/pipe_check | grep a | wc -m | cat -e");
     cd *cd_params = malloc(sizeof(cd) + 1);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
     params_cd(cd_params);
-    process_commands(command, good, cd_params, false);
+    process_commands(command, good, sh, false);
     cr_assert_stdout_eq_str("8$\n", "");
 }
 
@@ -235,8 +256,10 @@ Test(complex_command, test, .init=cr_redirect_stdout)
     char *command = strdup("cat < tests/pipe_check | grep a | wc -m | cat -e > tests/complex");
     char *check = strdup("cat tests/complex");
     cd *cd_params = malloc(sizeof(cd) + 1);
+shell_t *sh = malloc(sizeof(shell_t));
+params_shell(0, NULL, sh);
     params_cd(cd_params);
-    process_commands(command, good, cd_params, false);
-    process_commands(check, good, cd_params, false);
+    process_commands(command, good, sh, false);
+    process_commands(check, good, sh, false);
     cr_assert_stdout_eq_str("8$\n", "");
 }

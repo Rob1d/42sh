@@ -89,6 +89,8 @@ typedef struct {
     shell_t *sh;
 }pipe_t;
 
+void params_shell(int av, char **argc, shell_t *sh);
+int len_double_tab(char **tab);
 bool str_start_with(char *str, char *start);
 bool str_star_with_spe(char *str, char *str_start);
 void display_alias(shell_t *sh);

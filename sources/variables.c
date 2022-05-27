@@ -7,6 +7,13 @@
 
 #include "../includes/minishell.h"
 
+int len_double_tab(char **tab)
+{
+    int i = 0;
+    for (; tab[i] != NULL; ++i);
+    return i;
+}
+
 static void add_variable(char *name, char *value, shell_t *sh)
 {
     var_t *tmp = sh->lk_var;

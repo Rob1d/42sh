@@ -18,13 +18,6 @@ static char *check_my_var(char *str, shell_t *sh, char **env)
     return NULL;
 }
 
-int len_double_tab(char **tab)
-{
-    int i = 0;
-    for (; tab[i] != NULL; ++i);
-    return i;
-}
-
 int get_total_len_double_tab(char **tab)
 {
     int ret = 0;

@@ -6,7 +6,7 @@ BLUE='\033[1;94m'
 GREEN='\033[1;92m'
 exec 2>/dev/null
 printf "${BLUE}start test ${RED}\n"
-make -s;
+make -s
 if [[ $(echo "ls" | tcsh) != $(echo "ls" | ./42sh) ]]; then
   echo "error at ls"
 fi
@@ -31,7 +31,7 @@ if [[ $(echo "./tests/a.out" | tcsh) != $(echo "./tests/a.out" | ./42sh) ]]; the
   echo "error at segv"
 fi
 
-if [[ $(echo "ls -la ; ls ; echo \"lol\"" | tcsh) != $(echo "ls -la ; ls ; echo \"lol\"" | ./42sh) ]]; then
+if [[ $(echo "ls -la --color=none; ls --color=none; echo \"lol\"" | tcsh) != $(echo "ls -la ; ls ; echo \"lol\"" | ./42sh) ]]; then
   echo "error at separator";
 fi
 
@@ -47,6 +47,9 @@ if [[ $(echo "echo \"foo\" > check ; cat check ; rm check" | tcsh) != $(echo "ec
   echo "error at right redirections"
 fi
 
-printf "${GREEN}end test\n"
+printf "${GREEN}end test\nunit test"
+make tests_run -s
+gcovr --exclude test
+gcovr --exclude test --branches
 printf "${NC}"
 make fclean -s;

@@ -10,9 +10,11 @@
 static void remove_quote(char *command)
 {
     for (int i = 0; command[i] != '\0'; i++) {
-        if ((command[i] == '"' || command[i] == '\'') && (i > 0 && command[i - 1] != '\\'))
+        if ((command[i] == '"' || command[i] == '\'')
+        && (i > 0 && command[i - 1] != '\\'))
             command[i] = ' ';
-        if ((command[i] == '"' || command[i] == '\'') && (i > 0 && command[i - 1] == '\\'))
+        if ((command[i] == '"' || command[i] == '\'')
+        && (i > 0 && command[i - 1] == '\\'))
             command[i - 1] = ' ';
     }
 }
