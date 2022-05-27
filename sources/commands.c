@@ -46,21 +46,10 @@ int launch_command(char **env, char **pars, shell_t *sh)
     return 0;
 }
 
-int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
+static int process_commands_red
+(char *line, char **env, shell_t *sh, bool is_piped)
 {
-    char **pars;
-    char *tmp_line = as_alias(line, sh);
-    while (!is_str_equal(tmp_line, line)) {
-        line = strdup(tmp_line);
-        tmp_line = as_alias(line, sh);
-    }
-    line = as_var(line, sh, env);
-    if (line == NULL) return 1;
-    if (is_str_equal(line, "ui")) return 1;
-    if (right_redirection(line, env, sh)) return 1;
-    if (pipe_gestion(line, env, sh)) return 1;
-    if (display_history(line, sh)) return 1;
-    pars = parsing(line);
+    char **pars = parsing(line);
     if (set_alias(pars, sh, line)) return 1;
     if (my_echo(env, line, pars, sh)) return 1;
     if (is_builtin_name(pars[0]) && is_piped) return 1;
@@ -73,4 +62,20 @@ int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
     if (left_redirection(line, env, sh)) return 1;
     if (set_variable(pars, sh)) return 1;
     return launch_command(env, pars, sh);
+}
+
+int process_commands(char *line, char **env, shell_t *sh, bool is_piped)
+{
+    char *tmp_line = as_alias(line, sh);
+    while (!is_str_equal(tmp_line, line)) {
+        line = strdup(tmp_line);
+        tmp_line = as_alias(line, sh);
+    }
+    line = as_var(line, sh, env);
+    if (line == NULL) return 1;
+    if (is_str_equal(line, "ui")) return 1;
+    if (right_redirection(line, env, sh)) return 1;
+    if (pipe_gestion(line, env, sh)) return 1;
+    if (display_history(line, sh)) return 1;
+    return process_commands_red(line, env, sh, is_piped);
 }

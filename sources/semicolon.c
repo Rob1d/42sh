@@ -13,7 +13,8 @@ static bool no_space(char *command, int *i)
     for (; command[tmp_i] != '\0' && command[tmp_i] != ';'; ++tmp_i)
         if (command[tmp_i] != ' ' && command[tmp_i] != 9)
             return true;
-    ++*i;
+    if (command[*i] == '|' || command[*i] == '&')
+        ++*i;
     return false;
 }
 
@@ -66,8 +67,11 @@ char **semicolon(char *command, shell_t *sh, int i, int cp)
         } else if (command[i] != ';') {
             re[sh->len_separator][cp] = command[i];
             ++cp;
+        }
+            /*
         } else if (command[i] == '\0')
             --i;
+             */
     }
     re[sh->len_separator][cp] = '\0';re[sh->len_separator + 1] = NULL;
     return re;
