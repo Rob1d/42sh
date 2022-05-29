@@ -28,7 +28,8 @@ int get_total_len_double_tab(char **tab)
 
 char *get_concat(char **pars)
 {
-    char *res = malloc(sizeof(char) * (get_total_len_double_tab(pars) * 2) + 1);
+    char *res = malloc(sizeof(char) *
+    (get_total_len_double_tab(pars) * 2) + 1);
     res[0] = '\0';
     for (int i = 0; pars[i] != NULL; ++i)
         strcat(res, pars[i]);
@@ -42,7 +43,7 @@ char **pars_var(char *command)
     int cp_i = 0;
     ret[0] = malloc(sizeof(char) * strlen(command) + 1);
     for (int i = 0; command[i] != '\0'; ++i) {
-        if (command[i] == '$') {
+        if (command[i] == '$' || command[i] == ' ') {
             ret[cp][cp_i] = '\0';
             ++cp;
             ret = realloc(ret, sizeof(char * ) * (cp + 2));

@@ -38,11 +38,23 @@ void add_first_var(shell_t *sh)
     add_variable("one", "one", sh);
 }
 
-bool set_variable(char **pars, shell_t *sh)
+static void put_variables(char **pars, shell_t *sh, int j)
 {
     char *value;
     int i = 0;
     char *var_name;
+    var_name = strdup(pars[j]);
+    for (; var_name[i] != '\0' && var_name[i] != '='; ++i);
+    if (var_name[i] == '\0' || (var_name[i] == '=' && var_name[i + 1] == '\0'))
+        value = NULL;
+    else
+        value = strdup(pars[j]) + i + 1;
+    var_name[i] = '\0';
+    add_variable(var_name, value, sh);
+}
+
+bool set_variable(char **pars, shell_t *sh)
+{
     if (!is_str_equal("set", pars[0])) return false;
     if (pars[1] == NULL) {
         for (var_t *tmp = sh->lk_var; tmp != NULL; tmp = tmp->next) {
@@ -52,12 +64,7 @@ bool set_variable(char **pars, shell_t *sh)
         }
         return true;
     }
-    var_name = strdup(pars[1]);
-    for (; var_name[i] != '\0' && var_name[i] != '='; ++i);
-    if (var_name[i] == '\0' || (var_name[i] == '=' && var_name[i + 1] == '\0'))
-        value = NULL;
-    else
-        value = strdup(pars[1]) + i + 1;
-    var_name[i] = '\0';add_variable(var_name, value, sh);
+    for (int j = 1; pars[j] != NULL; ++j)
+        put_variables(pars, sh, j);
     return true;
 }
