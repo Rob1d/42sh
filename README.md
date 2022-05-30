@@ -1,5 +1,7 @@
 # 42sh
-The binding of isaac : abort() is a fangame made in csfml by epitech students for our final graphic project of the first year in epitech
+The 42sh is a final year project at epitech.
+This is a little shell with gestion of launching commands, pipe, redirection.
+additional features like autocompletion, history, backticks, alias,history, variables can be launch by runnig the program with the -a
 
 
 
