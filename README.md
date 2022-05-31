@@ -1,7 +1,7 @@
 # 42sh
 The 42sh is a final year project at epitech.
 This is a little shell with gestion of launching commands, pipe, redirection.
-additional features like autocompletion, history, backticks, alias,history, variables can be launch by runnig the program with the -a
+additional features like autocompletion, history, backticks, alias and variables. They can be launched by running the program with the -a
 
 
 
